@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 Invoice Builder | Gokulraj Natarajan</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- App Styles -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- SheetJS & html2pdf -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- LEFT PANEL: CONTROL CENTER / BUILDER -->
+    <aside class="control-panel no-print">
+      <div class="panel-header">
+        <div class="brand-badge">
+          <span class="badge-dot"></span>
+          <span>Invoice Builder Studio</span>
+        </div>
+        <h1>Generate Bill</h1>
+        <p>A4 Electronics Component Billing Software with History & Auto Invoice No.</p>
+      </div>
+
+      <!-- Action Buttons Top -->
+      <div class="action-bar-top">
+        <button id="btnSaveNew" class="btn btn-accent">
+          <i class="fa-solid fa-floppy-disk"></i> Save & New Bill
+        </button>
+        <button id="btnDownloadPdf" class="btn btn-primary">
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </button>
+        <button id="btnPrint" class="btn btn-secondary">
+          <i class="fa-solid fa-print"></i> Print / Save PDF
+        </button>
+      </div>
+
+      <!-- Accordion / Control Sections -->
+      <div class="control-sections">
+
+        <!-- SECTION 0: INVOICE HISTORY LOG -->
+        <div class="control-card">
+          <div class="card-header space-between">
+            <div class="title-with-icon">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <h2>Saved Invoice History</h2>
+            </div>
+            <span class="badge-count" id="historyCount">0 Saved</span>
+          </div>
+          <div class="card-body">
+            <div class="history-list" id="historyListContainer">
+              <!-- Dynamically populated saved invoices -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 1: INVOICE META & CUSTOMER INFO -->
+        <div class="control-card">
+          <div class="card-header">
+            <i class="fa-solid fa-file-invoice"></i>
+            <h2>Invoice & Customer Details</h2>
+          </div>
+          <div class="card-body grid-2">
+            <div class="form-group">
+              <label for="inputInvoiceNo">Invoice No:</label>
+              <input type="text" id="inputInvoiceNo" value="INV-2026-001" placeholder="e.g. INV-2026-001">
+            </div>
+            <div class="form-group">
+              <label for="inputInvoiceDate">Date:</label>
+              <input type="date" id="inputInvoiceDate">
+            </div>
+          </div>
+
+          <div class="card-subtitle"><i class="fa-solid fa-user"></i> BILL TO (CUSTOMER)</div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="inputCustName">Customer Name:</label>
+              <input type="text" id="inputCustName" placeholder="Enter Customer Name">
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="inputCustPhone">Phone:</label>
+                <input type="text" id="inputCustPhone" placeholder="+91 XXXXX XXXXX">
+              </div>
+              <div class="form-group">
+                <label for="inputCustEmail">Email:</label>
+                <input type="email" id="inputCustEmail" placeholder="customer@example.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputCustAddress">Address:</label>
+              <textarea id="inputCustAddress" rows="2" placeholder="Street, City, State, Pincode"></textarea>
+            </div>
+          </div>
+
+          <div class="card-subtitle"><i class="fa-solid fa-user-gear"></i> FROM (SELLER DETAILS)</div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Seller Name:</label>
+              <input type="text" id="inputSellerName" value="GOKULRAJ NATARAJAN" readonly class="readonly-input">
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="inputSellerPhone">Seller Phone:</label>
+                <input type="text" id="inputSellerPhone" value="+91 934515852" placeholder="+91 934515852">
+              </div>
+              <div class="form-group">
+                <label for="inputSellerEmail">Seller Email:</label>
+                <input type="email" id="inputSellerEmail" value="gokulnatraj06@gmail.com" placeholder="gokulnatraj06@gmail.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputSellerAddress">Seller Address:</label>
+              <textarea id="inputSellerAddress" rows="2" placeholder="Seller address details"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: ADD COMPONENTS FROM CATALOG -->
+        <div class="control-card">
+          <div class="card-header space-between">
+            <div class="title-with-icon">
+              <i class="fa-solid fa-microchip"></i>
+              <h2>Component Catalog (Excel Data)</h2>
+            </div>
+            <label for="fileExcelUpload" class="btn-sm-upload" title="Upload custom PRICE.xlsx">
+              <i class="fa-solid fa-file-excel"></i> Load Excel
+              <input type="file" id="fileExcelUpload" accept=".xlsx, .xls, .csv" style="display:none;">
+            </label>
+          </div>
+          
+          <div class="card-body">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="catalogSearch" placeholder="Search component (e.g. Arduino, ESP32, Sensor)...">
+            </div>
+
+            <div class="catalog-summary">
+              <span>Catalog items loaded: <strong id="catalogCount">0</strong></span>
+              <span class="price-hint">Click item to add to bill</span>
+            </div>
+
+            <div class="catalog-list" id="catalogListContainer">
+              <!-- Dynamically populated catalog items -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: NON-TAXABLE CHARGES & CUSTOM ITEMS -->
+        <div class="control-card">
+          <div class="card-header">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <h2>Labour, Wooden Base & Options</h2>
+          </div>
+          <div class="card-body">
+            
+            <!-- Non-Taxable Charges Toggles -->
+            <div class="non-tax-section">
+              <div class="section-title-sm"><i class="fa-solid fa-toggle-on font-red"></i> Toggle Optional Charges</div>
+              
+              <!-- Labour Toggle Button & Input -->
+              <div class="toggle-charge-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="chkEnableLabour" checked>
+                  <span class="slider"></span>
+                </label>
+                <span class="toggle-label">Include Assembly & Labour Charge</span>
+              </div>
+              <div class="form-group margin-top-xs" id="groupLabourInput">
+                <label for="inputLabourCharge">Labour Amount (Rs.):</label>
+                <input type="number" id="inputLabourCharge" value="150" min="0" placeholder="0">
+              </div>
+
+              <!-- Wooden Chassis Toggle Button & Input -->
+              <div class="toggle-charge-row margin-top-sm">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="chkEnableWooden" checked>
+                  <span class="slider"></span>
+                </label>
+                <span class="toggle-label">Include Wooden Base & Chassis</span>
+              </div>
+              <div class="form-group margin-top-xs" id="groupWoodenInput">
+                <label for="inputWoodenBaseCharge">Wooden Base Amount (Rs.):</label>
+                <input type="number" id="inputWoodenBaseCharge" value="100" min="0" placeholder="0">
+              </div>
+            </div>
+
+            <hr class="card-divider">
+
+            <!-- Custom Item Adder -->
+            <div class="custom-item-form">
+              <div class="section-title-sm"><i class="fa-solid fa-plus-circle font-red"></i> Custom Component Adder</div>
+              <div class="form-group">
+                <label for="customDesc">Item Description:</label>
+                <input type="text" id="customDesc" placeholder="e.g. Custom Component / Module">
+              </div>
+              <div class="grid-3">
+                <div class="form-group">
+                  <label for="customQty">Qty:</label>
+                  <input type="number" id="customQty" value="1" min="1">
+                </div>
+                <div class="form-group">
+                  <label for="customPrice">Price (Rs.):</label>
+                  <input type="number" id="customPrice" placeholder="0" min="0">
+                </div>
+                <div class="form-group add-btn-container">
+                  <button id="btnAddCustomItem" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-plus"></i> Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <hr class="card-divider">
+
+            <!-- Discount -->
+            <div class="discount-form">
+              <div class="form-group">
+                <label for="inputDiscount">Discount Amount (Rs.):</label>
+                <input type="number" id="inputDiscount" value="0" min="0" placeholder="0">
+              </div>
+            </div>
+
+            <div class="action-bar-bottom">
+              <button id="btnClearAll" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash-can"></i> Clear All Items
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- RIGHT PANEL: A4 LIVE PRINTABLE PREVIEW -->
+    <main class="preview-panel">
+      <div class="preview-toolbar no-print">
+        <div class="preview-title">
+          <i class="fa-solid fa-eye"></i>
+          <span>Live A4 Printable Document Preview</span>
+        </div>
+        <div class="preview-actions">
+          <button id="btnQuickPdf" class="btn-icon" title="Quick PDF Download">
+            <i class="fa-solid fa-download"></i> PDF
+          </button>
+          <button id="btnQuickPrint" class="btn-icon" title="Print Invoice">
+            <i class="fa-solid fa-print"></i> Print
+          </button>
+        </div>
+      </div>
+
+      <!-- A4 PAPER SHEET CONTAINER -->
+      <div class="a4-wrapper">
+        <div id="invoiceSheet" class="a4-sheet">
+          
+          <!-- INVOICE HEADER -->
+          <header class="invoice-header">
+            <div class="header-left">
+              <h1 class="seller-name-heading" id="viewSellerName">GOKULRAJ NATARAJAN</h1>
+            </div>
+            <div class="header-right">
+              <h2 class="invoice-title">INVOICE</h2>
+              <div class="invoice-meta-box">
+                <div class="meta-row">
+                  <span class="meta-label">Invoice No:</span>
+                  <span class="meta-val" id="viewInvoiceNo">INV-2026-001</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-label">Date:</span>
+                  <span class="meta-val" id="viewInvoiceDate">07/09/2026</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div class="accent-red-divider"></div>
+
+          <!-- ADDRESSES SECTION -->
+          <section class="addresses-section">
+            <div class="address-box from-box">
+              <div class="box-title">FROM (SELLER)</div>
+              <div class="person-name" id="viewSellerNameSub">GOKULRAJ NATARAJAN</div>
+              <div class="contact-line" id="viewSellerPhone">Phone: +91 934515852</div>
+              <div class="contact-line" id="viewSellerEmail">Email: gokulnatraj06@gmail.com</div>
+              <div class="address-lines" id="viewSellerAddress">123 Tech Park Avenue, Innovation District</div>
+            </div>
+
+            <div class="address-box billto-box">
+              <div class="box-title">BILL TO (CUSTOMER)</div>
+              <div class="person-name" id="viewCustName">Customer Name</div>
+              <div class="contact-line" id="viewCustPhone">Phone: +91 XXXXX XXXXX</div>
+              <div class="contact-line" id="viewCustEmail">Email: customer@example.com</div>
+              <div class="address-lines" id="viewCustAddress">Customer Address Line 1,<br>City, State, Pincode</div>
+            </div>
+          </section>
+
+          <!-- MAIN ITEM DETAILS TABLE -->
+          <section class="table-section">
+            <table class="invoice-table">
+              <thead>
+                <tr>
+                  <th class="col-sno">S.NO</th>
+                  <th class="col-desc">ITEM / COMPONENT</th>
+                  <th class="col-qty">QUANTITY</th>
+                  <th class="col-unit">PRICE (Rs.)</th>
+                  <th class="col-total">TOTAL (Rs.)</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceTableBody">
+                <!-- Dynamically populated bill rows -->
+              </tbody>
+            </table>
+          </section>
+
+          <!-- TERMS & SUMMARY CONTAINER -->
+          <section class="terms-summary-container">
+            <!-- PAYMENT & GENERAL TERMS -->
+            <div class="terms-left">
+              <div class="terms-card">
+                <div class="terms-header">TERMS &amp; CONDITIONS</div>
+                <ul>
+                  <li><strong>PAYMENT:</strong> 50% Advance Required | 50% Balance Before Delivery</li>
+                  <li><strong>TAX 15%:</strong> Covers component sourcing, procurement &amp; handling charges.</li>
+                  <li><strong>RETURNS:</strong> Goods once sold will not be taken back or exchanged.</li>
+                  <li><strong>VALIDITY:</strong> Quote &amp; pricing valid for 15 days from issue date.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- PRICE SUMMARY TABLE -->
+            <div class="summary-right">
+              <table class="summary-table">
+                <tr>
+                  <td class="sum-label">SUBTOTAL (Rs.)</td>
+                  <td class="sum-value" id="viewSubtotal">0.00</td>
+                </tr>
+                <tr>
+                  <td class="sum-label">DISCOUNT (Rs.)</td>
+                  <td class="sum-value" id="viewDiscount">0.00</td>
+                </tr>
+                <tr>
+                  <td class="sum-label">TAXABLE AMOUNT (Rs.)</td>
+                  <td class="sum-value" id="viewTaxable">0.00</td>
+                </tr>
+                <tr>
+                  <td class="sum-label">GST 18% (Rs.)</td>
+                  <td class="sum-value" id="viewGst">0.00</td>
+                </tr>
+                <tr>
+                  <td class="sum-label tax-15-label">TAX 15% (Rs.) <br><small>(Sourcing &amp; Handling)</small></td>
+                  <td class="sum-value" id="viewServiceTax">0.00</td>
+                </tr>
+                <!-- Non-Taxable Charges Lines -->
+                <tr id="rowLabour" class="non-tax-row">
+                  <td class="sum-label">ASSEMBLY &amp; LABOUR <br><small class="tag-no-tax">(No GST / Tax Exempt)</small></td>
+                  <td class="sum-value" id="viewLabourCharge">0.00</td>
+                </tr>
+                <tr id="rowWoodenBase" class="non-tax-row">
+                  <td class="sum-label">WOODEN MOUNTING BOARD &amp; CHASSIS <br><small class="tag-no-tax">(No GST / Tax Exempt)</small></td>
+                  <td class="sum-value" id="viewWoodenBaseCharge">0.00</td>
+                </tr>
+                <tr class="grand-total-row">
+                  <td class="sum-label-grand">GRAND TOTAL (Rs.)</td>
+                  <td class="sum-value-grand" id="viewGrandTotal">0.00</td>
+                </tr>
+              </table>
+            </div>
+          </section>
+
+          <!-- DUAL SIGNATURE SECTION WITH AMPLE SIGNATURE SPACE -->
+          <footer class="signature-section">
+            <div class="signature-box-left">
+              <div class="sig-blank-space"></div>
+              <div class="sig-line"></div>
+              <div class="sig-title">Customer Signature</div>
+            </div>
+
+            <div class="sig-space"></div>
+
+            <div class="signature-box-right">
+              <div class="sig-blank-space"></div>
+              <div class="sig-line"></div>
+              <div class="sig-title">Authorized Signature</div>
+              <div class="sig-name">GOKULRAJ NATARAJAN</div>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
