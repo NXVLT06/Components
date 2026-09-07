@@ -660,7 +660,7 @@ function calculateTotals() {
     // Toggle ON: Display discount line on bill if discount > 0
     if (discount > 0) {
       if (rowDiscount) rowDiscount.style.display = '';
-      if (viewDiscount) viewDiscount.textContent = '-' + formatCurrency(discount);
+      if (viewDiscount) viewDiscount.textContent = formatCurrency(discount);
     } else {
       if (rowDiscount) rowDiscount.style.display = 'none';
     }
