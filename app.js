@@ -58,6 +58,7 @@ let invoiceItems = [
 
 let savedInvoices = loadHistoryFromStorage();
 let invoiceCounter = getNextInvoiceCounter();
+let discountMode = 'flat'; // 'flat' | 'percent'
 
 // DOM Elements
 const inputInvoiceNo = document.getElementById('inputInvoiceNo');
@@ -84,7 +85,17 @@ const customDesc = document.getElementById('customDesc');
 const customQty = document.getElementById('customQty');
 const customPrice = document.getElementById('customPrice');
 const btnAddCustomItem = document.getElementById('btnAddCustomItem');
+
+const chkEnableDiscount = document.getElementById('chkEnableDiscount');
+const groupDiscountControls = document.getElementById('groupDiscountControls');
+const btnDiscountModeFlat = document.getElementById('btnDiscountModeFlat');
+const btnDiscountModePercent = document.getElementById('btnDiscountModePercent');
 const inputDiscount = document.getElementById('inputDiscount');
+const lblDiscountInput = document.getElementById('lblDiscountInput');
+const discountUnitBadge = document.getElementById('discountUnitBadge');
+const discountCalcHint = document.getElementById('discountCalcHint');
+const btnPresetClear = document.getElementById('btnPresetClear');
+
 const chkEnableLabour = document.getElementById('chkEnableLabour');
 const inputLabourCharge = document.getElementById('inputLabourCharge');
 const groupLabourInput = document.getElementById('groupLabourInput');
@@ -124,6 +135,7 @@ const invoiceTableBody = document.getElementById('invoiceTableBody');
 const viewSubtotal = document.getElementById('viewSubtotal');
 const rowDiscount = document.getElementById('rowDiscount');
 const viewDiscount = document.getElementById('viewDiscount');
+const viewDiscountTag = document.getElementById('viewDiscountTag');
 const viewTaxable = document.getElementById('viewTaxable');
 const viewGst = document.getElementById('viewGst');
 const viewServiceTax = document.getElementById('viewServiceTax');
@@ -173,13 +185,46 @@ function bindEvents() {
     input.addEventListener('input', updateInvoiceViews);
   });
 
-  [chkEnableLabour, chkEnableWooden].forEach(chk => {
+  [chkEnableDiscount, chkEnableLabour, chkEnableWooden].forEach(chk => {
     if (chk) {
       chk.addEventListener('change', () => {
         calculateTotals();
       });
     }
   });
+
+  // Discount Mode Switchers (Flat vs Percent)
+  if (btnDiscountModeFlat && btnDiscountModePercent) {
+    btnDiscountModeFlat.addEventListener('click', () => {
+      setDiscountMode('flat');
+    });
+    btnDiscountModePercent.addEventListener('click', () => {
+      setDiscountMode('percent');
+    });
+  }
+
+  // Preset Discount Buttons
+  document.querySelectorAll('.btn-preset[data-mode]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetMode = e.currentTarget.dataset.mode;
+      const targetVal = parseFloat(e.currentTarget.dataset.val) || 0;
+      
+      // Update UI preset active state
+      document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+
+      setDiscountMode(targetMode, targetVal);
+    });
+  });
+
+  // Clear / Reset Discount Preset
+  if (btnPresetClear) {
+    btnPresetClear.addEventListener('click', () => {
+      document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+      if (inputDiscount) inputDiscount.value = 0;
+      calculateTotals();
+    });
+  }
 
   catalogSearch.addEventListener('input', renderCatalog);
   btnAddCustomItem.addEventListener('click', handleAddCustomItem);
@@ -206,6 +251,28 @@ function bindEvents() {
   btnQuickPdf.addEventListener('click', downloadPDF);
   btnPrint.addEventListener('click', printInvoice);
   btnQuickPrint.addEventListener('click', printInvoice);
+}
+
+// Set Discount Mode (flat vs percent) & Optionally set value
+function setDiscountMode(mode, value = null) {
+  discountMode = mode;
+  if (value !== null && inputDiscount) {
+    inputDiscount.value = value;
+  }
+
+  if (mode === 'percent') {
+    if (btnDiscountModePercent) btnDiscountModePercent.classList.add('active');
+    if (btnDiscountModeFlat) btnDiscountModeFlat.classList.remove('active');
+    if (lblDiscountInput) lblDiscountInput.textContent = 'Discount Value (%):';
+    if (discountUnitBadge) discountUnitBadge.textContent = '%';
+  } else {
+    if (btnDiscountModeFlat) btnDiscountModeFlat.classList.add('active');
+    if (btnDiscountModePercent) btnDiscountModePercent.classList.remove('active');
+    if (lblDiscountInput) lblDiscountInput.textContent = 'Discount Value (₹):';
+    if (discountUnitBadge) discountUnitBadge.textContent = '₹';
+  }
+
+  calculateTotals();
 }
 
 // History & Counter Logic
@@ -266,7 +333,10 @@ function saveCurrentInvoiceToHistory(showNotification = true) {
     customerEmail: inputCustEmail.value,
     customerAddress: inputCustAddress.value,
     items: JSON.parse(JSON.stringify(invoiceItems)),
-    discount: parseFloat(inputDiscount.value) || 0,
+    discountInputVal: parseFloat(inputDiscount.value) || 0,
+    discountMode: discountMode || 'flat',
+    discountEnabled: (chkEnableDiscount ? chkEnableDiscount.checked : true),
+    discount: totals.discount,
     labourCharge: (chkEnableLabour && chkEnableLabour.checked) ? (parseFloat(inputLabourCharge.value) || 0) : 0,
     woodenBaseCharge: (chkEnableWooden && chkEnableWooden.checked) ? (parseFloat(inputWoodenBaseCharge.value) || 0) : 0,
     subtotal: totals.subtotal,
@@ -361,8 +431,13 @@ function loadInvoiceFromHistory(id) {
   inputCustPhone.value = record.customerPhone || '';
   inputCustEmail.value = record.customerEmail || '';
   inputCustAddress.value = record.customerAddress || '';
-  inputDiscount.value = record.discount || 0;
-  inputLabourCharge.value = record.labourCharge || 0;
+  
+  if (chkEnableDiscount) {
+    chkEnableDiscount.checked = record.discountEnabled !== undefined ? record.discountEnabled : true;
+  }
+  setDiscountMode(record.discountMode || 'flat', record.discountInputVal !== undefined ? record.discountInputVal : (record.discount || 0));
+
+  if (inputLabourCharge) inputLabourCharge.value = record.labourCharge || 0;
   inputWoodenBaseCharge.value = record.woodenBaseCharge || 0;
 
   invoiceItems = JSON.parse(JSON.stringify(record.items || []));
@@ -566,7 +641,43 @@ function calculateTotals() {
     subtotal += item.qty * item.unitPrice;
   });
 
-  const discount = parseFloat(inputDiscount.value) || 0;
+  // Handle Discount Toggle and Mode (Flat vs Percent)
+  let discount = 0;
+  const isDiscountEnabled = chkEnableDiscount ? chkEnableDiscount.checked : true;
+
+  if (isDiscountEnabled) {
+    if (groupDiscountControls) groupDiscountControls.style.display = 'block';
+
+    const inputVal = parseFloat(inputDiscount.value) || 0;
+    if (discountMode === 'percent') {
+      discount = (subtotal * inputVal) / 100;
+      if (viewDiscountTag) viewDiscountTag.textContent = `(${inputVal}%)`;
+    } else {
+      discount = inputVal;
+      if (viewDiscountTag) viewDiscountTag.textContent = `(Flat ₹)`;
+    }
+
+    // Toggle ON: Display discount line on bill if discount > 0
+    if (discount > 0) {
+      if (rowDiscount) rowDiscount.style.display = '';
+      if (viewDiscount) viewDiscount.textContent = '-' + formatCurrency(discount);
+    } else {
+      if (rowDiscount) rowDiscount.style.display = 'none';
+    }
+
+    if (discountCalcHint) {
+      discountCalcHint.textContent = `Effective Discount: ₹${formatCurrency(discount)}`;
+    }
+  } else {
+    // Toggle OFF: Remove discount completely from bill
+    if (groupDiscountControls) groupDiscountControls.style.display = 'none';
+    if (rowDiscount) rowDiscount.style.display = 'none';
+    discount = 0;
+    if (discountCalcHint) {
+      discountCalcHint.textContent = `Discount Disabled (Removed from bill)`;
+    }
+  }
+
   const taxable = Math.max(0, subtotal - discount);
   
   const gst = taxable * 0.18;
@@ -597,14 +708,6 @@ function calculateTotals() {
   const grandTotal = taxable + gst + serviceTax + labourCharge + woodenBaseCharge;
 
   viewSubtotal.textContent = formatCurrency(subtotal);
-  
-  if (discount > 0) {
-    if (rowDiscount) rowDiscount.style.display = '';
-    if (viewDiscount) viewDiscount.textContent = formatCurrency(discount);
-  } else {
-    if (rowDiscount) rowDiscount.style.display = 'none';
-  }
-
   viewTaxable.textContent = formatCurrency(taxable);
   viewGst.textContent = formatCurrency(gst);
   if (viewServiceTax) {

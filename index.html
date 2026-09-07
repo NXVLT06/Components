@@ -229,11 +229,56 @@
 
             <hr class="card-divider">
 
-            <!-- Discount -->
-            <div class="discount-form">
-              <div class="form-group">
-                <label for="inputDiscount">Discount Amount (Rs.):</label>
-                <input type="number" id="inputDiscount" value="0" min="0" placeholder="0">
+            <!-- Discount Section with Toggle and Presets -->
+            <div class="discount-section">
+              <div class="toggle-charge-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="chkEnableDiscount" checked>
+                  <span class="slider"></span>
+                </label>
+                <span class="toggle-label font-weight-600">Apply Discount to Bill</span>
+              </div>
+
+              <div id="groupDiscountControls" class="margin-top-xs">
+                <!-- Discount Mode Selector: Flat (Rs) vs Percentage (%) -->
+                <div class="form-group margin-top-xs">
+                  <label>Discount Type:</label>
+                  <div class="discount-mode-selector">
+                    <button type="button" id="btnDiscountModeFlat" class="btn-mode active">
+                      <i class="fa-solid fa-indian-rupee-sign"></i> Flat Amount (₹)
+                    </button>
+                    <button type="button" id="btnDiscountModePercent" class="btn-mode">
+                      <i class="fa-solid fa-percent"></i> Percentage (%)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Preset Discount Quick Buttons -->
+                <div class="discount-presets-container margin-top-xs">
+                  <label class="presets-label"><i class="fa-solid fa-bolt font-red"></i> Quick Presets:</label>
+                  <div class="preset-buttons">
+                    <button type="button" class="btn-preset" data-mode="percent" data-val="5">5%</button>
+                    <button type="button" class="btn-preset" data-mode="percent" data-val="10">10%</button>
+                    <button type="button" class="btn-preset" data-mode="percent" data-val="15">15%</button>
+                    <button type="button" class="btn-preset" data-mode="percent" data-val="20">20%</button>
+                    <button type="button" class="btn-preset" data-mode="percent" data-val="25">25%</button>
+                    <button type="button" class="btn-preset" data-mode="flat" data-val="50">₹50</button>
+                    <button type="button" class="btn-preset" data-mode="flat" data-val="100">₹100</button>
+                    <button type="button" class="btn-preset btn-preset-clear" id="btnPresetClear">
+                      <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Input Field -->
+                <div class="form-group margin-top-xs">
+                  <label for="inputDiscount" id="lblDiscountInput">Discount Value (₹):</label>
+                  <div class="input-with-badge">
+                    <input type="number" id="inputDiscount" value="0" min="0" placeholder="0">
+                    <span class="input-unit-badge" id="discountUnitBadge">₹</span>
+                  </div>
+                  <div class="discount-calc-hint" id="discountCalcHint">Effective Discount: ₹0.00</div>
+                </div>
               </div>
             </div>
 
@@ -351,7 +396,7 @@
                   <td class="sum-value" id="viewSubtotal">0.00</td>
                 </tr>
                 <tr id="rowDiscount">
-                  <td class="sum-label">DISCOUNT (Rs.)</td>
+                  <td class="sum-label">LESS: DISCOUNT <small id="viewDiscountTag" class="font-red"></small> (Rs.)</td>
                   <td class="sum-value" id="viewDiscount">0.00</td>
                 </tr>
                 <tr>

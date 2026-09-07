@@ -1057,6 +1057,143 @@ input:checked + .slider:before {
   text-align: right;
 }
 
+/* --------------------------------------------------------------------------
+   DISCOUNT CONTROLS & PRESET BUTTONS STYLING
+   -------------------------------------------------------------------------- */
+.discount-section {
+  background-color: rgba(24, 24, 27, 0.6);
+  border: 1px solid #27272A;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.discount-mode-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.btn-mode {
+  flex: 1;
+  background-color: #18181B;
+  border: 1px solid #3F3F46;
+  color: #A1A1AA;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.btn-mode:hover {
+  background-color: #27272A;
+  color: var(--color-white);
+}
+
+.btn-mode.active {
+  background-color: var(--color-red-primary);
+  border-color: var(--color-red-primary);
+  color: var(--color-white);
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+}
+
+.discount-presets-container {
+  background: #121215;
+  border: 1px dashed #3F3F46;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.presets-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #A1A1AA;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.btn-preset {
+  background-color: #27272A;
+  border: 1px solid #3F3F46;
+  color: #F4F4F5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-preset:hover {
+  background-color: #3F3F46;
+  border-color: var(--color-red-primary);
+  color: var(--color-white);
+}
+
+.btn-preset.active {
+  background-color: var(--color-red-primary);
+  border-color: var(--color-red-primary);
+  color: var(--color-white);
+}
+
+.btn-preset-clear {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #EF4444;
+}
+
+.btn-preset-clear:hover {
+  background-color: var(--color-red-primary);
+  border-color: var(--color-red-primary);
+  color: var(--color-white);
+}
+
+.input-with-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-badge input {
+  padding-right: 2.2rem;
+}
+
+.input-unit-badge {
+  position: absolute;
+  right: 0.6rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--color-red-primary);
+  pointer-events: none;
+}
+
+.discount-calc-hint {
+  font-size: 0.72rem;
+  color: #10B981;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.font-weight-600 {
+  font-weight: 600 !important;
+}
+
+.font-red {
+  color: var(--color-red-primary) !important;
+}
+
 /* PRINT MEDIA OVERRIDES */
 @media print {
   @page {
