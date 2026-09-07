@@ -94,6 +94,7 @@ const inputWoodenBaseCharge = document.getElementById('inputWoodenBaseCharge');
 const groupWoodenInput = document.getElementById('groupWoodenInput');
 
 const btnClearAll = document.getElementById('btnClearAll');
+const btnSaveInvoice = document.getElementById('btnSaveInvoice');
 const btnSaveNew = document.getElementById('btnSaveNew');
 
 const btnDownloadPdf = document.getElementById('btnDownloadPdf');
@@ -189,6 +190,9 @@ function bindEvents() {
     }
   });
 
+  if (btnSaveInvoice) {
+    btnSaveInvoice.addEventListener('click', () => saveCurrentInvoiceToHistory(true));
+  }
   btnSaveNew.addEventListener('click', saveAndStartNewInvoice);
   fileExcelUpload.addEventListener('change', handleExcelUpload);
   if (btnSyncExcel) {
@@ -238,26 +242,30 @@ function formatInvoiceNo(seq) {
   return `INV-2026-${padded}`;
 }
 
-// Save Current Bill to History and Increment Counter
-function saveAndStartNewInvoice() {
+// Save Current Bill to Localhost Storage & History List
+function saveCurrentInvoiceToHistory(showNotification = true) {
   if (invoiceItems.length === 0) {
-    alert("Cannot save an empty bill. Please add components first!");
-    return;
+    if (showNotification) {
+      alert("Cannot save an empty bill. Please add components first!");
+    }
+    return null;
   }
 
   const totals = calculateTotals();
+  const invNo = inputInvoiceNo.value || formatInvoiceNo(invoiceCounter);
+
   const newInvoiceRecord = {
     id: 'INV_' + Date.now(),
-    invoiceNo: inputInvoiceNo.value || formatInvoiceNo(invoiceCounter),
+    invoiceNo: invNo,
     date: inputInvoiceDate.value,
     customerName: inputCustName.value || 'Unnamed Customer',
     customerPhone: inputCustPhone.value,
     customerEmail: inputCustEmail.value,
     customerAddress: inputCustAddress.value,
-    items: [...invoiceItems],
+    items: JSON.parse(JSON.stringify(invoiceItems)),
     discount: parseFloat(inputDiscount.value) || 0,
-    labourCharge: parseFloat(inputLabourCharge.value) || 0,
-    woodenBaseCharge: parseFloat(inputWoodenBaseCharge.value) || 0,
+    labourCharge: (chkEnableLabour && chkEnableLabour.checked) ? (parseFloat(inputLabourCharge.value) || 0) : 0,
+    woodenBaseCharge: (chkEnableWooden && chkEnableWooden.checked) ? (parseFloat(inputWoodenBaseCharge.value) || 0) : 0,
     subtotal: totals.subtotal,
     taxable: totals.taxable,
     gst: totals.gst,
@@ -266,10 +274,22 @@ function saveAndStartNewInvoice() {
     createdAt: new Date().toISOString()
   };
 
+  // Replace existing record if saving the same invoice number
+  savedInvoices = savedInvoices.filter(inv => inv.invoiceNo !== invNo);
   savedInvoices.unshift(newInvoiceRecord);
   saveHistoryToStorage();
+  renderHistoryUI();
 
-  alert(`Invoice ${newInvoiceRecord.invoiceNo} saved to History!`);
+  if (showNotification) {
+    alert(`Invoice ${invNo} saved successfully to Local Storage History!`);
+  }
+  return newInvoiceRecord;
+}
+
+// Save Current Bill to History and Increment Counter for New Invoice
+function saveAndStartNewInvoice() {
+  const saved = saveCurrentInvoiceToHistory(true);
+  if (!saved) return;
 
   invoiceCounter += 1;
   inputInvoiceNo.value = formatInvoiceNo(invoiceCounter);
@@ -279,10 +299,9 @@ function saveAndStartNewInvoice() {
   inputCustEmail.value = '';
   inputCustAddress.value = '';
   inputDiscount.value = 0;
-  inputLabourCharge.value = 0;
-  inputWoodenBaseCharge.value = 0;
+  if (inputLabourCharge) inputLabourCharge.value = 150;
+  if (inputWoodenBaseCharge) inputWoodenBaseCharge.value = 100;
 
-  renderHistoryUI();
   renderInvoice();
 }
 
@@ -698,10 +717,12 @@ function loadLiveExcelFile(showNotification = false) {
 }
 
 function downloadPDF() {
+  saveCurrentInvoiceToHistory(false);
   window.print();
 }
 
 function printInvoice() {
+  saveCurrentInvoiceToHistory(false);
   window.print();
 }
 
