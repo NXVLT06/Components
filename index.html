@@ -132,12 +132,17 @@
           <div class="card-header space-between">
             <div class="title-with-icon">
               <i class="fa-solid fa-microchip"></i>
-              <h2>Component Catalog (Excel Data)</h2>
+              <h2>Component Catalog</h2>
             </div>
-            <label for="fileExcelUpload" class="btn-sm-upload" title="Upload custom PRICE.xlsx">
-              <i class="fa-solid fa-file-excel"></i> Load Excel
-              <input type="file" id="fileExcelUpload" accept=".xlsx, .xls, .csv" style="display:none;">
-            </label>
+            <div class="header-actions">
+              <button id="btnSyncExcel" class="btn-sm-sync" title="Sync live PRICE.xlsx file">
+                <i class="fa-solid fa-arrows-rotate"></i> Live Sync
+              </button>
+              <label for="fileExcelUpload" class="btn-sm-upload" title="Upload custom PRICE.xlsx">
+                <i class="fa-solid fa-file-excel"></i> Load Excel
+                <input type="file" id="fileExcelUpload" accept=".xlsx, .xls, .csv" style="display:none;">
+              </label>
+            </div>
           </div>
           
           <div class="card-body">
@@ -147,8 +152,8 @@
             </div>
 
             <div class="catalog-summary">
-              <span>Catalog items loaded: <strong id="catalogCount">0</strong></span>
-              <span class="price-hint">Click item to add to bill</span>
+              <span>Catalog items: <strong id="catalogCount">0</strong></span>
+              <span class="live-status-badge" id="liveSyncStatus"><i class="fa-solid fa-circle font-green"></i> Live Excel Synced</span>
             </div>
 
             <div class="catalog-list" id="catalogListContainer">

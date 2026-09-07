@@ -77,6 +77,8 @@ const catalogSearch = document.getElementById('catalogSearch');
 const catalogListContainer = document.getElementById('catalogListContainer');
 const catalogCount = document.getElementById('catalogCount');
 const fileExcelUpload = document.getElementById('fileExcelUpload');
+const btnSyncExcel = document.getElementById('btnSyncExcel');
+const liveSyncStatus = document.getElementById('liveSyncStatus');
 
 const customDesc = document.getElementById('customDesc');
 const customQty = document.getElementById('customQty');
@@ -153,6 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCatalog();
   renderHistoryUI();
   renderInvoice();
+  
+  // Auto-Sync Live PRICE.xlsx on load
+  loadLiveExcelFile(false);
 });
 
 // Event Bindings
@@ -186,6 +191,9 @@ function bindEvents() {
 
   btnSaveNew.addEventListener('click', saveAndStartNewInvoice);
   fileExcelUpload.addEventListener('change', handleExcelUpload);
+  if (btnSyncExcel) {
+    btnSyncExcel.addEventListener('click', () => loadLiveExcelFile(true));
+  }
 
   btnDownloadPdf.addEventListener('click', downloadPDF);
   btnQuickPdf.addEventListener('click', downloadPDF);
@@ -623,6 +631,9 @@ function handleExcelUpload(e) {
       if (newCatalog.length > 0) {
         currentCatalog = newCatalog;
         renderCatalog();
+        if (liveSyncStatus) {
+          liveSyncStatus.innerHTML = `<i class="fa-solid fa-circle font-green"></i> Loaded ${newCatalog.length} Items`;
+        }
         alert(`Successfully loaded ${newCatalog.length} items from Excel!`);
       }
     } catch (err) {
@@ -631,6 +642,59 @@ function handleExcelUpload(e) {
     }
   };
   reader.readAsArrayBuffer(file);
+}
+
+// Fetch & Sync Live PRICE.xlsx Automatically
+function loadLiveExcelFile(showNotification = false) {
+  const statusEl = document.getElementById('liveSyncStatus');
+  if (statusEl) {
+    statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin font-green"></i> Syncing PRICE.xlsx...`;
+  }
+  
+  fetch('PRICE.xlsx?t=' + Date.now())
+    .then(response => {
+      if (!response.ok) throw new Error('PRICE.xlsx not accessible via HTTP');
+      return response.arrayBuffer();
+    })
+    .then(buffer => {
+      const data = new Uint8Array(buffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+      if (jsonRows.length > 1) {
+        const newCatalog = [];
+        for (let i = 1; i < jsonRows.length; i++) {
+          const row = jsonRows[i];
+          if (row && row[0]) {
+            newCatalog.push({
+              id: i,
+              name: String(row[0]).trim(),
+              price: parseFloat(row[1]) || 0,
+              withGst: parseFloat(row[2]) || 0,
+              mrp: parseFloat(row[3]) || 0
+            });
+          }
+        }
+        if (newCatalog.length > 0) {
+          currentCatalog = newCatalog;
+          renderCatalog();
+          if (statusEl) {
+            statusEl.innerHTML = `<i class="fa-solid fa-circle font-green"></i> Live Excel (${newCatalog.length} Items)`;
+          }
+          if (showNotification) {
+            alert(`Live Sync Success! Loaded ${newCatalog.length} components directly from PRICE.xlsx`);
+          }
+        }
+      }
+    })
+    .catch(err => {
+      console.log('Live Excel fetch notice:', err.message);
+      if (statusEl) {
+        statusEl.innerHTML = `<i class="fa-solid fa-circle font-green"></i> Built-in Catalog (${currentCatalog.length} Items)`;
+      }
+    });
 }
 
 function downloadPDF() {

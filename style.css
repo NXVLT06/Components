@@ -224,6 +224,32 @@ body {
   border-radius: 9999px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-sm-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #6EE7B7;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-sm-sync:hover {
+  background: rgba(16, 185, 129, 0.25);
+  color: #A7F3D0;
+}
+
 .btn-sm-upload {
   display: inline-flex;
   align-items: center;
@@ -236,6 +262,19 @@ body {
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.font-green {
+  color: #10B981;
+}
+
+.live-status-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #34D399;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .card-body {
