@@ -122,6 +122,7 @@ const viewCustEmail = document.getElementById('viewCustEmail');
 
 const invoiceTableBody = document.getElementById('invoiceTableBody');
 const viewSubtotal = document.getElementById('viewSubtotal');
+const rowDiscount = document.getElementById('rowDiscount');
 const viewDiscount = document.getElementById('viewDiscount');
 const viewTaxable = document.getElementById('viewTaxable');
 const viewGst = document.getElementById('viewGst');
@@ -596,7 +597,14 @@ function calculateTotals() {
   const grandTotal = taxable + gst + serviceTax + labourCharge + woodenBaseCharge;
 
   viewSubtotal.textContent = formatCurrency(subtotal);
-  viewDiscount.textContent = formatCurrency(discount);
+  
+  if (discount > 0) {
+    if (rowDiscount) rowDiscount.style.display = '';
+    if (viewDiscount) viewDiscount.textContent = formatCurrency(discount);
+  } else {
+    if (rowDiscount) rowDiscount.style.display = 'none';
+  }
+
   viewTaxable.textContent = formatCurrency(taxable);
   viewGst.textContent = formatCurrency(gst);
   if (viewServiceTax) {
