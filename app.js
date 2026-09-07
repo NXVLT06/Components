@@ -191,9 +191,11 @@ function bindEvents() {
   });
 
   if (btnSaveInvoice) {
-    btnSaveInvoice.addEventListener('click', () => saveCurrentInvoiceToHistory(true));
+    btnSaveInvoice.addEventListener('click', () => saveAndStartNewInvoice(true));
   }
-  btnSaveNew.addEventListener('click', saveAndStartNewInvoice);
+  if (btnSaveNew) {
+    btnSaveNew.addEventListener('click', () => saveAndStartNewInvoice(true));
+  }
   fileExcelUpload.addEventListener('change', handleExcelUpload);
   if (btnSyncExcel) {
     btnSyncExcel.addEventListener('click', () => loadLiveExcelFile(true));
@@ -286,13 +288,16 @@ function saveCurrentInvoiceToHistory(showNotification = true) {
   return newInvoiceRecord;
 }
 
-// Save Current Bill to History and Increment Counter for New Invoice
-function saveAndStartNewInvoice() {
-  const saved = saveCurrentInvoiceToHistory(true);
+// Save Current Bill to History, Clear Form & Auto-Change Invoice Number for New Bill
+function saveAndStartNewInvoice(showNotification = true) {
+  const saved = saveCurrentInvoiceToHistory(showNotification);
   if (!saved) return;
 
-  invoiceCounter += 1;
+  // Automatically calculate next invoice sequence based on saved history
+  invoiceCounter = getNextInvoiceCounter();
   inputInvoiceNo.value = formatInvoiceNo(invoiceCounter);
+
+  // Clear form for fresh new invoice
   invoiceItems = [];
   inputCustName.value = '';
   inputCustPhone.value = '';
