@@ -161,6 +161,7 @@ body {
 }
 
 .btn-view-bill {
+  display: none; /* Only visible on mobile/tablets <= 1024px */
   background: linear-gradient(135deg, #0284C7, #2563EB);
   color: var(--color-white);
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
@@ -1397,6 +1398,10 @@ input:checked + .slider:before {
    RESPONSIVE MEDIA QUERIES (TABLETS & PHONES)
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
+  .btn-view-bill {
+    display: inline-flex;
+  }
+
   .mobile-fab {
     display: inline-flex;
   }
