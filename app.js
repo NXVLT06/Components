@@ -116,6 +116,24 @@ const btnQuickPrint = document.getElementById('btnQuickPrint');
 const historyListContainer = document.getElementById('historyListContainer');
 const historyCount = document.getElementById('historyCount');
 
+// Mobile & Zoom View Elements
+const appLayout = document.querySelector('.app-layout');
+const tabEdit = document.getElementById('tabEdit');
+const tabPreview = document.getElementById('tabPreview');
+const mobileItemBadge = document.getElementById('mobileItemBadge');
+const btnMobileSave = document.getElementById('btnMobileSave');
+const btnMobilePrint = document.getElementById('btnMobilePrint');
+
+const btnZoomIn = document.getElementById('btnZoomIn');
+const btnZoomOut = document.getElementById('btnZoomOut');
+const btnZoomReset = document.getElementById('btnZoomReset');
+const zoomLevelText = document.getElementById('zoomLevelText');
+const a4Wrapper = document.getElementById('a4Wrapper');
+const a4ScaleContainer = document.getElementById('a4ScaleContainer');
+
+let currentZoomScale = 1.0;
+let isAutoFitZoom = true;
+
 // Preview View Elements
 const viewInvoiceNo = document.getElementById('viewInvoiceNo');
 const viewInvoiceDate = document.getElementById('viewInvoiceDate');
@@ -166,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputCustEmail.value = "contact@techsolutions.com";
 
   bindEvents();
+  setupMobileViewsAndZoom();
   renderCatalog();
   renderHistoryUI();
   renderInvoice();
@@ -533,6 +552,9 @@ function renderInvoice() {
   updateInvoiceViews();
   renderTableRows();
   calculateTotals();
+  if (mobileItemBadge) {
+    mobileItemBadge.textContent = invoiceItems.length;
+  }
 }
 
 // Update Header & Address Text
@@ -859,3 +881,113 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+// --------------------------------------------------------------------------
+// MOBILE VIEW SWITCHING & RESPONSIVE A4 SHEET AUTO-SCALING
+// --------------------------------------------------------------------------
+function setupMobileViewsAndZoom() {
+  if (tabEdit && tabPreview) {
+    tabEdit.addEventListener('click', () => setMobileTab('editor'));
+    tabPreview.addEventListener('click', () => setMobileTab('preview'));
+  }
+
+  if (btnMobileSave) {
+    btnMobileSave.addEventListener('click', () => saveAndStartNewInvoice(true));
+  }
+
+  if (btnMobilePrint) {
+    btnMobilePrint.addEventListener('click', printInvoice);
+  }
+
+  if (btnZoomIn) {
+    btnZoomIn.addEventListener('click', () => {
+      isAutoFitZoom = false;
+      currentZoomScale = Math.min(1.5, currentZoomScale + 0.1);
+      applyA4Scale(currentZoomScale, false);
+    });
+  }
+
+  if (btnZoomOut) {
+    btnZoomOut.addEventListener('click', () => {
+      isAutoFitZoom = false;
+      currentZoomScale = Math.max(0.3, currentZoomScale - 0.1);
+      applyA4Scale(currentZoomScale, false);
+    });
+  }
+
+  if (btnZoomReset) {
+    btnZoomReset.addEventListener('click', () => {
+      isAutoFitZoom = true;
+      autoScaleA4Sheet();
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if (isAutoFitZoom) {
+      autoScaleA4Sheet();
+    }
+  });
+
+  // Delay initial scale calculation slightly to ensure layout rendering
+  setTimeout(autoScaleA4Sheet, 100);
+}
+
+function setMobileTab(tab) {
+  if (!appLayout) return;
+  if (tab === 'editor') {
+    appLayout.classList.add('show-editor');
+    appLayout.classList.remove('show-preview');
+    if (tabEdit) tabEdit.classList.add('active');
+    if (tabPreview) tabPreview.classList.remove('active');
+  } else {
+    appLayout.classList.remove('show-editor');
+    appLayout.classList.add('show-preview');
+    if (tabEdit) tabEdit.classList.remove('active');
+    if (tabPreview) tabPreview.classList.add('active');
+    setTimeout(autoScaleA4Sheet, 50);
+  }
+}
+
+function autoScaleA4Sheet() {
+  if (!a4ScaleContainer || !a4Wrapper) return;
+  
+  // Standard A4 sheet pixel layout width is ~794px (210mm)
+  const a4WidthPx = 794;
+  
+  // Get available wrapper width
+  const wrapperWidth = a4Wrapper.clientWidth || window.innerWidth;
+  const padding = window.innerWidth <= 640 ? 16 : 32;
+  const availableWidth = Math.max(280, wrapperWidth - padding);
+
+  if (window.innerWidth <= 1024) {
+    let scale = availableWidth / a4WidthPx;
+    scale = Math.min(1.0, Math.max(0.32, scale));
+    currentZoomScale = scale;
+    applyA4Scale(scale, true);
+  } else {
+    currentZoomScale = 1.0;
+    applyA4Scale(1.0, false);
+  }
+}
+
+function applyA4Scale(scale, isFit = false) {
+  if (!a4ScaleContainer) return;
+  a4ScaleContainer.style.transform = `scale(${scale})`;
+  
+  if (zoomLevelText) {
+    if (isFit && isAutoFitZoom) {
+      zoomLevelText.textContent = `Fit (${Math.round(scale * 100)}%)`;
+    } else {
+      zoomLevelText.textContent = `${Math.round(scale * 100)}%`;
+    }
+  }
+
+  // Adjust container height to fit scaled A4 sheet without massive overflow spacing
+  if (a4Wrapper && scale < 1) {
+    const scaledHeight = 1122 * scale + 30;
+    a4Wrapper.style.minHeight = `${scaledHeight}px`;
+  } else if (a4Wrapper) {
+    a4Wrapper.style.minHeight = '';
+  }
+}
+

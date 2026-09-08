@@ -1194,6 +1194,284 @@ input:checked + .slider:before {
   color: var(--color-red-primary) !important;
 }
 
+/* --------------------------------------------------------------------------
+   MOBILE NAVIGATION & ZOOM CONTROLS
+   -------------------------------------------------------------------------- */
+.mobile-nav-bar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #3F3F46;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mobile-brand-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+}
+
+.mobile-quick-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn-mobile-act {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn-mobile-save {
+  background-color: #10B981;
+  color: #FFF;
+}
+
+.btn-mobile-print {
+  background-color: var(--color-red-primary);
+  color: #FFF;
+}
+
+.mobile-tab-switcher {
+  display: flex;
+  gap: 0.35rem;
+  background: #18181B;
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 1px solid #3F3F46;
+}
+
+.mobile-tab-btn {
+  flex: 1;
+  padding: 0.55rem 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #A1A1AA;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.mobile-tab-btn i {
+  font-size: 0.85rem;
+}
+
+.mobile-tab-btn.active {
+  background-color: var(--color-red-primary);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+}
+
+/* Zoom Controls Widget */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.15rem 0.3rem;
+}
+
+.btn-zoom {
+  background-color: #334155;
+  color: #F8FAFC;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-zoom:hover {
+  background-color: var(--color-red-primary);
+}
+
+.zoom-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94A3B8;
+  padding: 0 0.25rem;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* A4 Scale Container */
+.a4-scale-container {
+  transform-origin: top center;
+  transition: transform 0.15s ease-out;
+  display: flex;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE MEDIA QUERIES (TABLETS & PHONES)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .mobile-nav-bar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-layout {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  /* View Switching Modes for Mobile */
+  .app-layout.show-editor .control-panel {
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    box-shadow: none !important;
+  }
+
+  .app-layout.show-editor .preview-panel {
+    display: none !important;
+  }
+
+  .app-layout.show-preview .control-panel {
+    display: none !important;
+  }
+
+  .app-layout.show-preview .preview-panel {
+    display: flex !important;
+    width: 100% !important;
+    padding: 1rem 0.5rem !important;
+    align-items: center;
+  }
+
+  .preview-toolbar {
+    max-width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .control-panel {
+    padding: 0.85rem;
+  }
+
+  .panel-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  .add-btn-container {
+    grid-column: span 2;
+  }
+
+  .add-btn-container .btn {
+    width: 100%;
+    padding: 0.6rem;
+  }
+
+  .action-bar-top {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .action-bar-top .btn {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .discount-mode-selector {
+    flex-direction: row;
+  }
+
+  .btn-preset {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.78rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.55rem 0.65rem;
+    font-size: 0.85rem;
+  }
+
+  .history-item,
+  .catalog-item {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .preview-toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .preview-title {
+    justify-content: center;
+  }
+
+  .preview-actions {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .btn-icon {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .zoom-controls {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
 /* PRINT MEDIA OVERRIDES */
 @media print {
   @page {
@@ -1212,7 +1490,8 @@ input:checked + .slider:before {
     print-color-adjust: exact !important;
   }
 
-  .no-print {
+  .no-print,
+  .mobile-nav-bar {
     display: none !important;
   }
 
@@ -1221,15 +1500,28 @@ input:checked + .slider:before {
     height: 297mm !important;
   }
 
+  .control-panel {
+    display: none !important;
+  }
+
   .preview-panel {
     padding: 0 !important;
     background: none !important;
     display: block !important;
+    width: 100% !important;
   }
 
   .a4-wrapper {
     padding: 0 !important;
     display: block !important;
+    width: 100% !important;
+  }
+
+  .a4-scale-container {
+    transform: none !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
   }
 
   .a4-sheet {
@@ -1280,3 +1572,4 @@ input:checked + .slider:before {
     padding: 0 !important;
   }
 }
+
