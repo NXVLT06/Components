@@ -124,6 +124,11 @@ const mobileItemBadge = document.getElementById('mobileItemBadge');
 const btnMobileSave = document.getElementById('btnMobileSave');
 const btnMobilePrint = document.getElementById('btnMobilePrint');
 
+const btnViewBill = document.getElementById('btnViewBill');
+const viewBillBadge = document.getElementById('viewBillBadge');
+const fabToggleView = document.getElementById('fabToggleView');
+const fabItemBadge = document.getElementById('fabItemBadge');
+
 const btnZoomIn = document.getElementById('btnZoomIn');
 const btnZoomOut = document.getElementById('btnZoomOut');
 const btnZoomReset = document.getElementById('btnZoomReset');
@@ -552,9 +557,9 @@ function renderInvoice() {
   updateInvoiceViews();
   renderTableRows();
   calculateTotals();
-  if (mobileItemBadge) {
-    mobileItemBadge.textContent = invoiceItems.length;
-  }
+  if (mobileItemBadge) mobileItemBadge.textContent = invoiceItems.length;
+  if (viewBillBadge) viewBillBadge.textContent = invoiceItems.length;
+  if (fabItemBadge) fabItemBadge.textContent = invoiceItems.length;
 }
 
 // Update Header & Address Text
@@ -891,6 +896,24 @@ function setupMobileViewsAndZoom() {
     tabPreview.addEventListener('click', () => setMobileTab('preview'));
   }
 
+  if (btnViewBill) {
+    btnViewBill.addEventListener('click', () => {
+      setMobileTab('preview');
+      const previewPanel = document.querySelector('.preview-panel');
+      if (previewPanel) previewPanel.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  if (fabToggleView) {
+    fabToggleView.addEventListener('click', () => {
+      if (appLayout && appLayout.classList.contains('show-preview')) {
+        setMobileTab('editor');
+      } else {
+        setMobileTab('preview');
+      }
+    });
+  }
+
   if (btnMobileSave) {
     btnMobileSave.addEventListener('click', () => saveAndStartNewInvoice(true));
   }
@@ -939,11 +962,19 @@ function setMobileTab(tab) {
     appLayout.classList.remove('show-preview');
     if (tabEdit) tabEdit.classList.add('active');
     if (tabPreview) tabPreview.classList.remove('active');
+    if (fabToggleView) {
+      fabToggleView.classList.remove('fab-in-preview');
+      fabToggleView.innerHTML = `<i class="fa-solid fa-eye"></i> View A4 Bill (<span id="fabItemBadge">${invoiceItems.length}</span>)`;
+    }
   } else {
     appLayout.classList.remove('show-editor');
     appLayout.classList.add('show-preview');
     if (tabEdit) tabEdit.classList.remove('active');
     if (tabPreview) tabPreview.classList.add('active');
+    if (fabToggleView) {
+      fabToggleView.classList.add('fab-in-preview');
+      fabToggleView.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Back to Form`;
+    }
     setTimeout(autoScaleA4Sheet, 50);
   }
 }

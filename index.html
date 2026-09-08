@@ -61,6 +61,9 @@
 
       <!-- Action Buttons Top -->
       <div class="action-bar-top">
+        <button id="btnViewBill" class="btn btn-view-bill" title="View live A4 printable bill">
+          <i class="fa-solid fa-eye"></i> View Bill (<span id="viewBillBadge">0</span>)
+        </button>
         <button id="btnSaveInvoice" class="btn btn-accent" title="Save current bill to localhost history">
           <i class="fa-solid fa-floppy-disk"></i> Save Bill
         </button>
@@ -483,7 +486,10 @@
       </div>
     </div>
   </main>
-</div>
+  <!-- FLOATING ACTION BUTTON FOR MOBILE (VIEW A4 BILL) -->
+  <button id="fabToggleView" class="mobile-fab no-print">
+    <i class="fa-solid fa-eye"></i> View A4 Bill (<span id="fabItemBadge">0</span>)
+  </button>
 
   <script src="app.js"></script>
 </body>

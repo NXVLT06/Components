@@ -160,6 +160,16 @@ body {
   background-color: #059669;
 }
 
+.btn-view-bill {
+  background: linear-gradient(135deg, #0284C7, #2563EB);
+  color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.btn-view-bill:hover {
+  background: linear-gradient(135deg, #0369A1, #1D4ED8);
+}
+
 .btn-outline-danger {
   background-color: transparent;
   color: #EF4444;
@@ -1341,10 +1351,45 @@ input:checked + .slider:before {
   justify-content: center;
 }
 
+/* Floating Action Button (FAB) for Mobile */
+.mobile-fab {
+  display: none;
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9999;
+  background: linear-gradient(135deg, #DC2626, #B91C1C);
+  color: #FFFFFF;
+  padding: 0.75rem 1.2rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.55);
+  cursor: pointer;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+}
+
+.mobile-fab:active {
+  transform: scale(0.94);
+}
+
+.mobile-fab.fab-in-preview {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.55);
+}
+
 /* --------------------------------------------------------------------------
    RESPONSIVE MEDIA QUERIES (TABLETS & PHONES)
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
+  .mobile-fab {
+    display: inline-flex;
+  }
+
   .mobile-nav-bar {
     display: flex;
     flex-direction: column;
