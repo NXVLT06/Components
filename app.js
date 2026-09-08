@@ -193,6 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCatalog();
   renderHistoryUI();
   renderInvoice();
+
+  // Make Invoice Bill the main/default page on mobile devices!
+  if (window.innerWidth <= 1024) {
+    setMobileTab('preview');
+  }
   
   // Auto-Sync Live PRICE.xlsx on load
   loadLiveExcelFile(false);
@@ -963,25 +968,25 @@ function setMobileTab(tab) {
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
 
-  if (tab === 'editor') {
+  if (tab === 'preview') {
+    appLayout.classList.remove('show-editor');
+    appLayout.classList.add('show-preview');
+    if (tabPreview) tabPreview.classList.add('active');
+    if (tabEdit) tabEdit.classList.remove('active');
+    if (fabToggleView) {
+      fabToggleView.classList.add('fab-in-preview');
+      fabToggleView.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> ✏️ Edit Form / Add Items`;
+    }
+    setTimeout(autoScaleA4Sheet, 30);
+  } else {
     appLayout.classList.add('show-editor');
     appLayout.classList.remove('show-preview');
     if (tabEdit) tabEdit.classList.add('active');
     if (tabPreview) tabPreview.classList.remove('active');
     if (fabToggleView) {
       fabToggleView.classList.remove('fab-in-preview');
-      fabToggleView.innerHTML = `<i class="fa-solid fa-eye"></i> View A4 Bill (<span id="fabItemBadge">${invoiceItems.length}</span>)`;
+      fabToggleView.innerHTML = `<i class="fa-solid fa-file-invoice"></i> 📄 View Invoice Bill (<span id="fabItemBadge">${invoiceItems.length}</span>)`;
     }
-  } else {
-    appLayout.classList.remove('show-editor');
-    appLayout.classList.add('show-preview');
-    if (tabEdit) tabEdit.classList.remove('active');
-    if (tabPreview) tabPreview.classList.add('active');
-    if (fabToggleView) {
-      fabToggleView.classList.add('fab-in-preview');
-      fabToggleView.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Back to Form`;
-    }
-    setTimeout(autoScaleA4Sheet, 30);
   }
 }
 
