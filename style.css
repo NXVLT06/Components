@@ -661,10 +661,9 @@ input:checked + .slider:before {
    ========================================================================== */
 
 .a4-sheet {
-  width: 210mm;
-  height: 297mm;
+  width: 100%;
+  max-width: 794px;
   min-height: 297mm;
-  max-height: 297mm;
   background-color: #FFFFFF !important;
   color: #000000 !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
@@ -1530,6 +1529,62 @@ input:checked + .slider:before {
   .zoom-controls {
     flex: 1;
     justify-content: center;
+  }
+
+  .a4-scale-container {
+    width: 100% !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+
+  .a4-sheet {
+    padding: 0.85rem 0.65rem !important;
+    min-height: auto !important;
+    border-radius: 6px;
+  }
+
+  .seller-name-heading {
+    font-size: 15pt !important;
+  }
+
+  .invoice-title {
+    font-size: 17pt !important;
+  }
+
+  .addresses-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .address-box {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .terms-summary-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .terms-left, .summary-right {
+    display: block !important;
+    width: 100% !important;
+    padding-right: 0 !important;
+  }
+
+  .signature-section {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .signature-box-left, .signature-box-right {
+    display: block !important;
+    width: 46% !important;
   }
 }
 

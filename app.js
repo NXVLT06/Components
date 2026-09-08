@@ -989,13 +989,15 @@ function autoScaleA4Sheet() {
   if (!a4ScaleContainer || !a4Wrapper) return;
   
   const windowWidth = window.innerWidth;
-  const a4WidthPx = 794; // 210mm in px
+  const a4WidthPx = 794;
   
-  if (windowWidth <= 1024) {
-    const padding = windowWidth <= 640 ? 16 : 32;
-    const availableWidth = windowWidth - padding;
+  if (windowWidth <= 640) {
+    currentZoomScale = 1.0;
+    applyA4Scale(1.0, true);
+  } else if (windowWidth <= 1024) {
+    const availableWidth = windowWidth - 32;
     let scale = availableWidth / a4WidthPx;
-    scale = Math.min(1.0, Math.max(0.30, scale));
+    scale = Math.min(1.0, Math.max(0.40, scale));
     currentZoomScale = scale;
     applyA4Scale(scale, true);
   } else {
@@ -1007,20 +1009,27 @@ function autoScaleA4Sheet() {
 function applyA4Scale(scale, isFit = false) {
   if (!a4ScaleContainer || !a4Wrapper) return;
 
-  a4ScaleContainer.style.width = '794px';
-  a4ScaleContainer.style.transformOrigin = 'top center';
-  a4ScaleContainer.style.transform = `scale(${scale})`;
+  if (window.innerWidth <= 640 && isAutoFitZoom) {
+    a4ScaleContainer.style.width = '100%';
+    a4ScaleContainer.style.transform = 'none';
+    a4ScaleContainer.style.marginBottom = '0px';
+    a4Wrapper.style.minHeight = 'auto';
+  } else {
+    a4ScaleContainer.style.width = '794px';
+    a4ScaleContainer.style.transformOrigin = 'top center';
+    a4ScaleContainer.style.transform = `scale(${scale})`;
 
-  const unscaledHeight = 1122; // 297mm in px
-  const scaledHeight = unscaledHeight * scale;
-  const marginBottomComp = (scaledHeight - unscaledHeight);
+    const unscaledHeight = 1122;
+    const scaledHeight = unscaledHeight * scale;
+    const marginBottomComp = (scaledHeight - unscaledHeight);
 
-  a4ScaleContainer.style.marginBottom = `${marginBottomComp + 20}px`;
-  a4Wrapper.style.minHeight = `${scaledHeight + 40}px`;
+    a4ScaleContainer.style.marginBottom = `${marginBottomComp + 20}px`;
+    a4Wrapper.style.minHeight = `${scaledHeight + 40}px`;
+  }
   
   if (zoomLevelText) {
     if (isFit && isAutoFitZoom) {
-      zoomLevelText.textContent = `Fit (${Math.round(scale * 100)}%)`;
+      zoomLevelText.textContent = window.innerWidth <= 640 ? '100%' : `Fit (${Math.round(scale * 100)}%)`;
     } else {
       zoomLevelText.textContent = `${Math.round(scale * 100)}%`;
     }
