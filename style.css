@@ -1344,11 +1344,22 @@ input:checked + .slider:before {
 }
 
 /* A4 Scale Container */
+.a4-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 2rem;
+  overflow-x: hidden;
+}
+
 .a4-scale-container {
+  width: 210mm;
   transform-origin: top center;
   transition: transform 0.15s ease-out;
   display: flex;
   justify-content: center;
+  margin: 0 auto;
 }
 
 /* Floating Action Button (FAB) for Mobile */

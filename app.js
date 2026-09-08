@@ -957,6 +957,12 @@ function setupMobileViewsAndZoom() {
 
 function setMobileTab(tab) {
   if (!appLayout) return;
+
+  // Always scroll window to top immediately on tab switch
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   if (tab === 'editor') {
     appLayout.classList.add('show-editor');
     appLayout.classList.remove('show-preview');
@@ -975,24 +981,21 @@ function setMobileTab(tab) {
       fabToggleView.classList.add('fab-in-preview');
       fabToggleView.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Back to Form`;
     }
-    setTimeout(autoScaleA4Sheet, 50);
+    setTimeout(autoScaleA4Sheet, 30);
   }
 }
 
 function autoScaleA4Sheet() {
   if (!a4ScaleContainer || !a4Wrapper) return;
   
-  // Standard A4 sheet pixel layout width is ~794px (210mm)
-  const a4WidthPx = 794;
+  const windowWidth = window.innerWidth;
+  const a4WidthPx = 794; // 210mm in px
   
-  // Get available wrapper width
-  const wrapperWidth = a4Wrapper.clientWidth || window.innerWidth;
-  const padding = window.innerWidth <= 640 ? 16 : 32;
-  const availableWidth = Math.max(280, wrapperWidth - padding);
-
-  if (window.innerWidth <= 1024) {
+  if (windowWidth <= 1024) {
+    const padding = windowWidth <= 640 ? 16 : 32;
+    const availableWidth = windowWidth - padding;
     let scale = availableWidth / a4WidthPx;
-    scale = Math.min(1.0, Math.max(0.32, scale));
+    scale = Math.min(1.0, Math.max(0.30, scale));
     currentZoomScale = scale;
     applyA4Scale(scale, true);
   } else {
@@ -1002,8 +1005,18 @@ function autoScaleA4Sheet() {
 }
 
 function applyA4Scale(scale, isFit = false) {
-  if (!a4ScaleContainer) return;
+  if (!a4ScaleContainer || !a4Wrapper) return;
+
+  a4ScaleContainer.style.width = '794px';
+  a4ScaleContainer.style.transformOrigin = 'top center';
   a4ScaleContainer.style.transform = `scale(${scale})`;
+
+  const unscaledHeight = 1122; // 297mm in px
+  const scaledHeight = unscaledHeight * scale;
+  const marginBottomComp = (scaledHeight - unscaledHeight);
+
+  a4ScaleContainer.style.marginBottom = `${marginBottomComp + 20}px`;
+  a4Wrapper.style.minHeight = `${scaledHeight + 40}px`;
   
   if (zoomLevelText) {
     if (isFit && isAutoFitZoom) {
@@ -1011,14 +1024,6 @@ function applyA4Scale(scale, isFit = false) {
     } else {
       zoomLevelText.textContent = `${Math.round(scale * 100)}%`;
     }
-  }
-
-  // Adjust container height to fit scaled A4 sheet without massive overflow spacing
-  if (a4Wrapper && scale < 1) {
-    const scaledHeight = 1122 * scale + 30;
-    a4Wrapper.style.minHeight = `${scaledHeight}px`;
-  } else if (a4Wrapper) {
-    a4Wrapper.style.minHeight = '';
   }
 }
 
