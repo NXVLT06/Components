@@ -156,6 +156,84 @@
           </div>
         </div>
 
+        <!-- SECTION 1.5: PROJECT & WORKING PRINCIPLE (SMART BILL BUILDER) -->
+        <div class="control-card project-card">
+          <div class="card-header space-between">
+            <div class="title-with-icon">
+              <i class="fa-solid fa-diagram-project font-red"></i>
+              <h2>Project &amp; Working Principle</h2>
+            </div>
+            <span class="badge-count" id="projectBadge">Smart Builder</span>
+          </div>
+
+          <div class="card-body">
+            <!-- Project Title Input with Auto-Suggest -->
+            <div class="form-group">
+              <label for="inputProjectTitle">
+                <i class="fa-solid fa-heading"></i> Project Title:
+              </label>
+              <div class="project-input-wrap">
+                <input type="text" id="inputProjectTitle" list="projectPresetsList" placeholder="e.g. Smart Irrigation System, Obstacle Robot..." autocomplete="off">
+                <button type="button" id="btnAutoSuggestProject" class="btn-input-action" title="Auto-fill components and working principle">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Fill
+                </button>
+              </div>
+              <datalist id="projectPresetsList">
+                <!-- Dynamically populated from project database -->
+              </datalist>
+            </div>
+
+            <!-- Popular Quick Project Chips -->
+            <div class="project-chips-wrapper">
+              <span class="chips-label"><i class="fa-solid fa-bolt font-red"></i> Quick Pick:</span>
+              <div class="project-chips" id="projectChipsContainer">
+                <!-- Populated dynamically via JS -->
+              </div>
+            </div>
+
+            <!-- Working Principle Textarea -->
+            <div class="form-group margin-top-xs">
+              <div class="label-with-action">
+                <label for="inputWorkingPrinciple">
+                  <i class="fa-solid fa-gears"></i> Working Principle:
+                </label>
+                <button type="button" id="btnCopyPrinciple" class="btn-text-sm" title="Copy working principle to clipboard">
+                  <i class="fa-solid fa-copy"></i> Copy
+                </button>
+              </div>
+              <textarea id="inputWorkingPrinciple" rows="3" placeholder="Enter or auto-generate the operating principle / summary of the project..."></textarea>
+            </div>
+
+            <!-- Detected / Suggested Components for Project -->
+            <div class="project-components-preview" id="projectComponentsPreview" style="display: none;">
+              <div class="preview-header">
+                <span class="preview-title"><i class="fa-solid fa-microchip font-red"></i> Project Components (<span id="detectedItemCount">0</span>):</span>
+                <span class="preview-total" id="detectedTotalEstimate">₹0</span>
+              </div>
+              <div class="detected-chips-list" id="detectedChipsList"></div>
+            </div>
+
+            <!-- Project Actions & Bill Integration -->
+            <div class="project-actions-row margin-top-xs">
+              <button type="button" id="btnLoadProjectItems" class="btn btn-primary btn-sm" title="Add all project components to the invoice bill">
+                <i class="fa-solid fa-cart-plus"></i> Load to Bill
+              </button>
+              <button type="button" id="btnClearProject" class="btn btn-secondary btn-sm" title="Clear project title and working principle">
+                <i class="fa-solid fa-rotate-left"></i> Clear
+              </button>
+            </div>
+
+            <!-- Toggle to show/hide on printable bill -->
+            <div class="toggle-charge-row margin-top-xs">
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkShowProjectOnBill" checked>
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label font-weight-600">Show Project on Printed Bill</span>
+            </div>
+          </div>
+        </div>
+
         <!-- SECTION 2: ADD COMPONENTS FROM CATALOG -->
         <div class="control-card">
           <div class="card-header space-between">
@@ -388,6 +466,23 @@
               <div class="contact-line" id="viewCustPhone">Phone: +91 XXXXX XXXXX</div>
               <div class="contact-line" id="viewCustEmail">Email: customer@example.com</div>
               <div class="address-lines" id="viewCustAddress">Customer Address Line 1,<br>City, State, Pincode</div>
+            </div>
+          </section>
+
+          <!-- PROJECT SPECIFICATION SECTION (TITLE & WORKING PRINCIPLE) -->
+          <section class="project-spec-section" id="viewProjectSection" style="display: none;">
+            <div class="project-spec-header">
+              <span class="project-spec-tag"><i class="fa-solid fa-diagram-project"></i> PROJECT SPECIFICATION</span>
+            </div>
+            <div class="project-spec-body">
+              <div class="project-spec-row project-title-row">
+                <span class="spec-label">PROJECT TITLE:</span>
+                <span class="spec-title-text" id="viewProjectTitle">-</span>
+              </div>
+              <div class="project-spec-row project-principle-row" id="viewProjectPrincipleRow">
+                <span class="spec-label">WORKING PRINCIPLE:</span>
+                <span class="spec-desc-text" id="viewWorkingPrinciple">-</span>
+              </div>
             </div>
           </section>
 

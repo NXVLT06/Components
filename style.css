@@ -586,6 +586,186 @@ input:checked + .slider:before {
 }
 
 /* --------------------------------------------------------------------------
+   PROJECT SPECIFICATION & SMART BUILDER CONTROLS
+   -------------------------------------------------------------------------- */
+.project-input-wrap {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.project-input-wrap input {
+  flex: 1;
+}
+
+.btn-input-action {
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  padding: 0.45rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.btn-input-action:hover {
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  transform: translateY(-1px);
+}
+
+.project-chips-wrapper {
+  margin-top: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.chips-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #A1A1AA;
+  margin-bottom: 0.25rem;
+}
+
+.project-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  max-height: 80px;
+  overflow-y: auto;
+  padding-bottom: 2px;
+}
+
+.project-chip {
+  background-color: #27272A;
+  color: #D4D4D8;
+  border: 1px solid #3F3F46;
+  border-radius: 9999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.project-chip:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+  border-color: var(--color-red-primary);
+  color: #FFF;
+}
+
+.project-chip.active {
+  background-color: var(--color-red-primary);
+  border-color: var(--color-red-primary);
+  color: #FFF;
+}
+
+.label-with-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+
+.label-with-action label {
+  margin-bottom: 0;
+}
+
+.btn-text-sm {
+  background: none;
+  border: none;
+  color: #38BDF8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-text-sm:hover {
+  color: #7DD3FC;
+  text-decoration: underline;
+}
+
+.project-components-preview {
+  margin-top: 0.5rem;
+  background-color: #27272A;
+  border: 1px solid #3F3F46;
+  border-radius: 6px;
+  padding: 0.5rem 0.6rem;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.preview-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #F4F4F5;
+}
+
+.preview-total {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #FCA5A5;
+}
+
+.detected-chips-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.detected-chip {
+  background-color: #18181B;
+  border: 1px solid #52525B;
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.68rem;
+  color: #E4E4E7;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.detected-chip .chip-qty {
+  background-color: #3F3F46;
+  color: #FFF;
+  border-radius: 3px;
+  padding: 0 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.detected-chip .chip-price {
+  color: #F87171;
+  font-weight: 600;
+}
+
+.project-actions-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.project-actions-row .btn {
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
    RIGHT PANEL - LIVE A4 PREVIEW
    -------------------------------------------------------------------------- */
 
@@ -810,6 +990,69 @@ input:checked + .slider:before {
   font-size: 8pt;
   color: #1F2937 !important;
   font-weight: 500;
+}
+
+/* Project Specification Section on Live A4 Sheet */
+.project-spec-section {
+  width: 100%;
+  border: 1px solid #D1D5DB;
+  border-left: 4px solid #DC2626 !important;
+  background-color: #FAFAFA !important;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.project-spec-header {
+  margin-bottom: 3px;
+}
+
+.project-spec-tag {
+  font-size: 7.5pt;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #DC2626 !important;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.project-spec-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.project-spec-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.spec-label {
+  font-size: 7.5pt;
+  font-weight: 800;
+  color: #000000 !important;
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: 110px;
+}
+
+.spec-title-text {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 9pt;
+  font-weight: 800;
+  color: #000000 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.spec-desc-text {
+  font-size: 7.5pt;
+  color: #1F2937 !important;
+  line-height: 1.35;
+  text-align: justify;
 }
 
 /* Main Table */
@@ -1669,8 +1912,20 @@ input:checked + .slider:before {
   }
 
   .billto-box,
-  .terms-card {
+  .terms-card,
+  .project-spec-section {
     border-left-color: #DC2626 !important;
+  }
+
+  .project-spec-section {
+    background-color: #FAFAFA !important;
+    border: 1px solid #D1D5DB !important;
+    border-left: 4px solid #DC2626 !important;
+    page-break-inside: avoid !important;
+  }
+
+  .project-spec-tag {
+    color: #DC2626 !important;
   }
 
   .sum-value-grand {

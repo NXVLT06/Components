@@ -48,6 +48,281 @@ const INITIAL_CATALOG = [
   { id: 42, name: "DF PLAYER MINI", price: 299, withGst: 352.82, mrp: 406 }
 ];
 
+// Comprehensive Knowledge Base of Popular Electronics & IoT Projects
+const PROJECT_DATABASE = [
+  {
+    title: "Smart Irrigation System using IoT",
+    category: "AgriTech / IoT",
+    keywords: ["irrigation", "soil", "moisture", "plant", "agriculture", "farm", "water motor"],
+    principle: "The soil moisture sensor continuously measures the volumetric water content in soil by determining electrical conductivity between probes. When moisture drops below a threshold, the Arduino microcontroller triggers the 5V relay module to activate the water motor pump, irrigating crops until optimal moisture is restored.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "SOIL MOISOR SENSOR (WET)", qty: 1 },
+      { name: "5V RELAY MODULE", qty: 1 },
+      { name: "WATER MOTOR", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 },
+      { name: "BREADBOARD", qty: 1 }
+    ]
+  },
+  {
+    title: "Obstacle Avoiding Robot / Autonomous Rover",
+    category: "Robotics",
+    keywords: ["obstacle", "avoiding", "robot", "rover", "car", "ultrasonic", "collision"],
+    principle: "The ultrasonic sensor emits high-frequency sound wave pulses and measures echo reflection time to calculate obstacle distance. If an object is detected within range, the Arduino halts forward movement, rotates the servo-mounted sensor to find a clear path, and steers the robot away from collisions.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "ULTRASONIC SENSOR", qty: 1 },
+      { name: "SERVO MOTOR SG90", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 },
+      { name: "BREADBOARD", qty: 1 }
+    ]
+  },
+  {
+    title: "IoT Smart Weather & Environmental Station",
+    category: "IoT / Environmental",
+    keywords: ["weather", "environment", "climate", "temperature", "humidity", "dht11", "esp32"],
+    principle: "The DHT11 capacitive humidity sensor and NTC thermistor capture ambient temperature and humidity data. The ESP32 microcontroller processes these signals, renders real-time graphical metrics onto the 0.96-inch OLED display, and transmits data telemetry to a cloud dashboard over Wi-Fi.",
+    components: [
+      { name: "ESP32", qty: 1 },
+      { name: "DHT11", qty: 1 },
+      { name: "OLED 0.96", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 },
+      { name: "BREADBOARD", qty: 1 }
+    ]
+  },
+  {
+    title: "Gas Leakage & Smoke Detection System with Alert",
+    category: "Safety & Security",
+    keywords: ["gas", "smoke", "mq2", "leak", "fire", "lpg", "toxic"],
+    principle: "The MQ-2 sensor utilizes a SnO2 sensitive layer whose electrical conductivity increases when exposed to combustible gases like LPG, smoke, and methane. The Arduino samples the analog voltage; when threshold is breached, it sounds an acoustic buzzer alarm and flashes safety alerts on the 16x2 LCD.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "MQ2 SMOKE/GAS SENSOR", qty: 1 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "RFID Based Attendance & Smart Door Lock Access",
+    category: "Security / Automation",
+    keywords: ["rfid", "attendance", "door lock", "access", "rc522", "security", "gate"],
+    principle: "The RC522 RFID reader transmits a 13.56 MHz electromagnetic field that powers passive RFID tags. The tag modulates its unique UID back to the reader via SPI. The microcontroller validates the UID against stored authorization tables; on approval, it actuates the servo lock latch and chimes the buzzer.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "RFID RC522", qty: 1 },
+      { name: "SERVO MOTOR SG90", qty: 1 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "IoT Patient Vital Health Monitoring System",
+    category: "Biomedical / IoT",
+    keywords: ["health", "patient", "heart", "pulse", "spo2", "vital", "medical", "max30102"],
+    principle: "Uses dual-wavelength photoplethysmography (PPG) with red and infrared LEDs in the MAX30102 sensor to calculate blood oxygen saturation (SpO2) and pulse rate. The MLX90614 reads non-contact optical infrared radiation for body temperature, streaming vitals to doctors over IoT.",
+    components: [
+      { name: "ESP32", qty: 1 },
+      { name: "MAX30102 PULSE", qty: 1 },
+      { name: "MLX90614 TEMP SENSOR", qty: 1 },
+      { name: "OLED 0.96", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "GPS & GSM Vehicle Tracking and Accident Alert",
+    category: "Automotive / Embedded",
+    keywords: ["gps", "gsm", "vehicle", "tracking", "accident", "sim800l", "alert", "car tracking"],
+    principle: "The MPU6050 6-axis accelerometer monitors sudden impact shocks and vehicle rollover tilt. Upon collision detection, the NEO-6M GPS acquires real-time latitude/longitude coordinates, and the SIM800L module automatically sends an emergency SMS with Google Maps coordinates to responders.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "GPS MODULE NEO 6M", qty: 1 },
+      { name: "SIM800L", qty: 1 },
+      { name: "MPU6050", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Smart Water Quality & Purity Testing System",
+    category: "Environmental",
+    keywords: ["water quality", "tds", "ph", "purity", "drinking water", "water contamination"],
+    principle: "The TDS probe measures total dissolved ions through AC electrical conductivity, while the pH glass electrode probe measures hydrogen ion potential. The Arduino calculates PPM and pH value, displays potable purity status on the LCD 16x2, and sounds an alarm if contamination is detected.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "TDS SENSOR", qty: 1 },
+      { name: "PH SENSOR", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Smart Digital Energy Meter with Overload Circuit Breaker",
+    category: "Power Systems",
+    keywords: ["energy meter", "current", "voltage", "power", "acs712", "overload", "electricity"],
+    principle: "The ACS712 Hall-effect transducer senses load current and the voltage sensor measures voltage drop across a precision divider. The microcontroller calculates instant power (W) and cumulative energy consumption (kWh). If current exceeds safe limits, the 5V relay disconnects the circuit instantly.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "ACS712 20A CURRENT SENSOR", qty: 1 },
+      { name: "DC VOLTMETER VOLT SENSOR", qty: 1 },
+      { name: "5V RELAY MODULE", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Touchless Automatic Hand Sanitizer & Temperature Scanner",
+    category: "Healthcare / Automation",
+    keywords: ["sanitizer", "touchless", "dispenser", "contactless", "temperature scanner", "hygiene"],
+    principle: "An infrared proximity sensor detects when a hand is placed under the dispenser nozzle. The Arduino drives the mini water pump for a calibrated pulse to spray disinfectant, while the MLX90614 non-contact infrared sensor reads forehead/palm temperature, triggering the buzzer on fever readings.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "IR SENSOR", qty: 1 },
+      { name: "MLX90614 TEMP SENSOR", qty: 1 },
+      { name: "WATER MOTOR", qty: 1 },
+      { name: "OLED 0.96", qty: 1 },
+      { name: "BUZZER 12MM", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Digital Security Keypad Password Door Lock",
+    category: "Security",
+    keywords: ["keypad", "password", "pin", "lock", "security safe", "door lock"],
+    principle: "The 4x4 matrix keypad is scanned row-by-column to read 4-digit user PIN entries. The Arduino compares the entered PIN with stored credentials in EEPROM; if valid, it drives the servo motor to unlock the latch mechanism. After three consecutive invalid attempts, it locks the system and sounds the alarm.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "KEYPAD 4X4", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "SERVO MOTOR SG90", qty: 1 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Smart Blind Walking Assistance Stick",
+    category: "Assistive Tech",
+    keywords: ["blind", "walking stick", "cane", "visually impaired", "assistance"],
+    principle: "An ultrasonic transducer mounted at the cane's tip transmits high-frequency acoustic pulses to scan for ground and knee-level obstacles. The Arduino computes target proximity; as obstacles come closer, it increases buzzer beep frequency to provide real-time acoustic navigation cues.",
+    components: [
+      { name: "Arduino Nano", qty: 1 },
+      { name: "ULTRASONIC SENSOR", qty: 1 },
+      { name: "BUZZER 12MM", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 },
+      { name: "BREADBOARD", qty: 1 }
+    ]
+  },
+  {
+    title: "Industrial Automated Color Sorting Conveyor",
+    category: "Industrial Automation",
+    keywords: ["color", "sorting", "conveyor", "tcs3200", "industrial"],
+    principle: "The TCS3200 sensor focuses reflected light onto an 8x8 array of filtered photodiodes, producing a square wave whose frequency is directly proportional to Red, Green, and Blue light intensity. The Arduino evaluates the RGB signature and commands dual servo gates to divert colored objects into designated sorting bins.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "COLOUR SENSOR YCS3200", qty: 1 },
+      { name: "SERVO MOTOR SG90", qty: 2 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "LoRa Long-Range Wireless Sensor Node for Agriculture",
+    category: "Wireless / IoT",
+    keywords: ["lora", "wireless", "long range", "sx1278", "telemetry"],
+    principle: "Gathers microclimate temperature, relative humidity, and soil moisture metrics across sprawling agricultural acreage. The Arduino Nano formats data into encrypted packets and broadcasts them via 433 MHz Chirp Spread Spectrum (CSS) LoRa modulation over kilometers to a central receiver gateway.",
+    components: [
+      { name: "Arduino Nano", qty: 1 },
+      { name: "LORA RA02 (SX1278)", qty: 1 },
+      { name: "ANTENNA", qty: 1 },
+      { name: "SMA150MM", qty: 1 },
+      { name: "DHT11", qty: 1 },
+      { name: "SOIL MOISOR SENSOR (WET)", qty: 1 },
+      { name: "3.3V 5V LOGIC LEVEL CONVERTOR", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Smart Audio Announcer & Voice Prompt Player",
+    category: "Embedded / Audio",
+    keywords: ["audio", "voice", "announcer", "dfplayer", "sound", "mp3", "speech"],
+    principle: "Integrates a hardware MP3/WAV decoding module with on-board micro-SD storage. When pushbutton triggers or external inputs occur, the Arduino sends asynchronous serial UART commands to the DFPlayer Mini to broadcast corresponding high-fidelity voice announcements or accessibility messages.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "DF PLAYER MINI", qty: 1 },
+      { name: "PUSHBUTTON", qty: 2 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Automatic Street Light & Smart Lighting Controller",
+    category: "Smart City",
+    keywords: ["street light", "lighting", "ldr", "smart light", "energy saving"],
+    principle: "Senses ambient luminance transitions and motion of oncoming vehicles or pedestrians using IR sensors. The Arduino switches high-power illumination lamps via a 5V relay only when dusk and movement are detected, dimming or turning off during inactive hours to save electricity.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "IR SENSOR", qty: 1 },
+      { name: "5V RELAY MODULE", qty: 1 },
+      { name: "MIX RESISTOR BOX", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Smart Fall Detection & Elderly Motion Alert System",
+    category: "Healthcare",
+    keywords: ["fall detection", "elderly", "motion", "accident alert", "mpu6050", "accelerometer"],
+    principle: "The MPU6050 MEMS sensor continuously measures tri-axial acceleration and rotational velocity. An algorithm recognizes rapid free-fall drops followed by severe impact force and prolonged zero-movement states, immediately sounding an audible alert and sending emergency GPS/SMS alerts to family members.",
+    components: [
+      { name: "Arduino Nano", qty: 1 },
+      { name: "MPU6050", qty: 1 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "SIM800L", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Home Automation using ESP8266 & Wi-Fi",
+    category: "Home Automation",
+    keywords: ["home automation", "esp8266", "wifi", "smart home", "appliances", "iot relay"],
+    principle: "The ESP8266 hosts an embedded lightweight HTTP web server connected to local Wi-Fi. Users can access a dashboard from any browser/smartphone to toggle relays controlling home AC appliances, with live status updates reflected on the LCD screen.",
+    components: [
+      { name: "ESP8266", qty: 1 },
+      { name: "5V RELAY MODULE", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 },
+      { name: "BREADBOARD", qty: 1 }
+    ]
+  },
+  {
+    title: "Smart Inductive Metal Detector Robot",
+    category: "Robotics / Security",
+    keywords: ["metal detector", "metal", "inductive", "landmine", "scanner", "mine detection"],
+    principle: "Uses electromagnetic induction in an inductive coil to detect eddy currents induced in conductive metals. When metallic objects are located, the resonant frequency alters, which the Arduino detects to trigger an acoustic buzzer alert and display target proximity on the LCD.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "METAL SENSOR", qty: 1 },
+      { name: "BUZZER MODULE", qty: 1 },
+      { name: "LCD 16X2", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  },
+  {
+    title: "Fire Fighting Robot with Smoke & Water Extinguisher",
+    category: "Robotics / Safety",
+    keywords: ["fire fighting", "fire", "smoke", "extinguisher", "flame", "safety robot"],
+    principle: "Detects combustion fumes using the MQ-2 sensor. When hazard levels are sensed, the Arduino positions a water nozzle using a servo motor and energizes the relay-driven water pump to extinguish localized flames autonomously.",
+    components: [
+      { name: "Arduino uno", qty: 1 },
+      { name: "MQ2 SMOKE/GAS SENSOR", qty: 1 },
+      { name: "WATER MOTOR", qty: 1 },
+      { name: "SERVO MOTOR SG90", qty: 1 },
+      { name: "5V RELAY MODULE", qty: 1 },
+      { name: "JUMPER WIRE", qty: 1 }
+    ]
+  }
+];
+
 // Application State
 let currentCatalog = [...INITIAL_CATALOG];
 let invoiceItems = [
@@ -85,6 +360,22 @@ const customDesc = document.getElementById('customDesc');
 const customQty = document.getElementById('customQty');
 const customPrice = document.getElementById('customPrice');
 const btnAddCustomItem = document.getElementById('btnAddCustomItem');
+
+// Project Specification & Auto-Builder Elements
+let currentDetectedProjectComponents = [];
+const inputProjectTitle = document.getElementById('inputProjectTitle');
+const btnAutoSuggestProject = document.getElementById('btnAutoSuggestProject');
+const projectPresetsList = document.getElementById('projectPresetsList');
+const projectChipsContainer = document.getElementById('projectChipsContainer');
+const inputWorkingPrinciple = document.getElementById('inputWorkingPrinciple');
+const btnCopyPrinciple = document.getElementById('btnCopyPrinciple');
+const projectComponentsPreview = document.getElementById('projectComponentsPreview');
+const detectedItemCount = document.getElementById('detectedItemCount');
+const detectedTotalEstimate = document.getElementById('detectedTotalEstimate');
+const detectedChipsList = document.getElementById('detectedChipsList');
+const btnLoadProjectItems = document.getElementById('btnLoadProjectItems');
+const btnClearProject = document.getElementById('btnClearProject');
+const chkShowProjectOnBill = document.getElementById('chkShowProjectOnBill');
 
 const chkEnableDiscount = document.getElementById('chkEnableDiscount');
 const groupDiscountControls = document.getElementById('groupDiscountControls');
@@ -170,6 +461,12 @@ const rowWoodenBase = document.getElementById('rowWoodenBase');
 const viewWoodenBaseCharge = document.getElementById('viewWoodenBaseCharge');
 const viewGrandTotal = document.getElementById('viewGrandTotal');
 
+// Project Specification Preview Views
+const viewProjectSection = document.getElementById('viewProjectSection');
+const viewProjectTitle = document.getElementById('viewProjectTitle');
+const viewWorkingPrinciple = document.getElementById('viewWorkingPrinciple');
+const viewProjectPrincipleRow = document.getElementById('viewProjectPrincipleRow');
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
   const today = new Date().toISOString().split('T')[0];
@@ -188,6 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputCustPhone.value = "+91 91234 56789";
   inputCustEmail.value = "contact@techsolutions.com";
 
+  initProjectFeatures();
   bindEvents();
   setupMobileViewsAndZoom();
   renderCatalog();
@@ -213,6 +511,43 @@ function bindEvents() {
   ].forEach(input => {
     input.addEventListener('input', updateInvoiceViews);
   });
+
+  // Project Title & Working Principle Event Listeners
+  if (inputProjectTitle) {
+    inputProjectTitle.addEventListener('input', () => {
+      updateInvoiceViews();
+      autoSuggestProjectDetails(false);
+    });
+    inputProjectTitle.addEventListener('change', () => {
+      autoSuggestProjectDetails(false);
+    });
+  }
+
+  if (btnAutoSuggestProject) {
+    btnAutoSuggestProject.addEventListener('click', () => {
+      autoSuggestProjectDetails(true);
+    });
+  }
+
+  if (inputWorkingPrinciple) {
+    inputWorkingPrinciple.addEventListener('input', updateInvoiceViews);
+  }
+
+  if (btnCopyPrinciple) {
+    btnCopyPrinciple.addEventListener('click', copyWorkingPrinciple);
+  }
+
+  if (btnLoadProjectItems) {
+    btnLoadProjectItems.addEventListener('click', loadProjectComponentsToBill);
+  }
+
+  if (btnClearProject) {
+    btnClearProject.addEventListener('click', clearProjectDetails);
+  }
+
+  if (chkShowProjectOnBill) {
+    chkShowProjectOnBill.addEventListener('change', updateInvoiceViews);
+  }
 
   [chkEnableDiscount, chkEnableLabour, chkEnableWooden].forEach(chk => {
     if (chk) {
@@ -327,6 +662,8 @@ function getNextInvoiceCounter() {
   savedInvoices.forEach(inv => {
     if (inv.invoiceNo && inv.invoiceNo.includes('INV-2026-')) {
       const parts = inv.invoiceNo.split('INV-2026-');
+
+      
       const num = parseInt(parts[1]);
       if (!isNaN(num) && num >= maxSeq) {
         maxSeq = num + 1;
@@ -361,6 +698,9 @@ function saveCurrentInvoiceToHistory(showNotification = true) {
     customerPhone: inputCustPhone.value,
     customerEmail: inputCustEmail.value,
     customerAddress: inputCustAddress.value,
+    projectTitle: inputProjectTitle ? inputProjectTitle.value.trim() : '',
+    workingPrinciple: inputWorkingPrinciple ? inputWorkingPrinciple.value.trim() : '',
+    showProjectOnBill: (chkShowProjectOnBill ? chkShowProjectOnBill.checked : true),
     items: JSON.parse(JSON.stringify(invoiceItems)),
     discountInputVal: parseFloat(inputDiscount.value) || 0,
     discountMode: discountMode || 'flat',
@@ -403,6 +743,11 @@ function saveAndStartNewInvoice(showNotification = true) {
   inputCustPhone.value = '';
   inputCustEmail.value = '';
   inputCustAddress.value = '';
+  if (inputProjectTitle) inputProjectTitle.value = '';
+  if (inputWorkingPrinciple) inputWorkingPrinciple.value = '';
+  currentDetectedProjectComponents = [];
+  if (projectComponentsPreview) projectComponentsPreview.style.display = 'none';
+  document.querySelectorAll('.project-chip').forEach(c => c.classList.remove('active'));
   inputDiscount.value = 0;
   if (inputLabourCharge) inputLabourCharge.value = 150;
   if (inputWoodenBaseCharge) inputWoodenBaseCharge.value = 100;
@@ -460,6 +805,17 @@ function loadInvoiceFromHistory(id) {
   inputCustPhone.value = record.customerPhone || '';
   inputCustEmail.value = record.customerEmail || '';
   inputCustAddress.value = record.customerAddress || '';
+
+  if (inputProjectTitle) inputProjectTitle.value = record.projectTitle || '';
+  if (inputWorkingPrinciple) inputWorkingPrinciple.value = record.workingPrinciple || '';
+  if (chkShowProjectOnBill) {
+    chkShowProjectOnBill.checked = record.showProjectOnBill !== undefined ? record.showProjectOnBill : true;
+  }
+  if (record.projectTitle) {
+    updateProjectComponentsPreview(record.projectTitle);
+  } else if (projectComponentsPreview) {
+    projectComponentsPreview.style.display = 'none';
+  }
   
   if (chkEnableDiscount) {
     chkEnableDiscount.checked = record.discountEnabled !== undefined ? record.discountEnabled : true;
@@ -479,6 +835,409 @@ function deleteInvoiceFromHistory(id) {
     saveHistoryToStorage();
     renderHistoryUI();
   }
+}
+
+// ==========================================================================
+// PROJECT SPECIFICATION & SMART BILL BUILDER ENGINE
+// ==========================================================================
+
+// Initialize Datalist and Quick Pick Project Chips
+function initProjectFeatures() {
+  if (projectPresetsList) {
+    projectPresetsList.innerHTML = '';
+    PROJECT_DATABASE.forEach(proj => {
+      const opt = document.createElement('option');
+      opt.value = proj.title;
+      projectPresetsList.appendChild(opt);
+    });
+  }
+
+  if (projectChipsContainer) {
+    projectChipsContainer.innerHTML = '';
+    const popularProjects = [
+      { name: "Smart Irrigation", fullTitle: "Smart Irrigation System using IoT" },
+      { name: "Obstacle Robot", fullTitle: "Obstacle Avoiding Robot / Autonomous Rover" },
+      { name: "IoT Weather", fullTitle: "IoT Smart Weather & Environmental Station" },
+      { name: "Gas Leak Alert", fullTitle: "Gas Leakage & Smoke Detection System with Alert" },
+      { name: "RFID Access", fullTitle: "RFID Based Attendance & Smart Door Lock Access" },
+      { name: "Health Monitor", fullTitle: "IoT Patient Vital Health Monitoring System" },
+      { name: "GPS Tracking", fullTitle: "GPS & GSM Vehicle Tracking and Accident Alert" },
+      { name: "Energy Meter", fullTitle: "Smart Digital Energy Meter with Overload Circuit Breaker" }
+    ];
+
+    popularProjects.forEach(chipData => {
+      const chip = document.createElement('span');
+      chip.className = 'project-chip';
+      chip.textContent = chipData.name;
+      chip.title = `Click to load ${chipData.fullTitle}`;
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.project-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const found = PROJECT_DATABASE.find(p => p.title === chipData.fullTitle);
+        if (found) {
+          applyProjectToBuilder(found);
+        } else {
+          if (inputProjectTitle) inputProjectTitle.value = chipData.fullTitle;
+          autoSuggestProjectDetails(true);
+        }
+      });
+      projectChipsContainer.appendChild(chip);
+    });
+  }
+}
+
+// Apply selected project to UI inputs, working principle, and preview
+function applyProjectToBuilder(proj) {
+  if (inputProjectTitle) inputProjectTitle.value = proj.title;
+  if (inputWorkingPrinciple) inputWorkingPrinciple.value = proj.principle;
+  updateProjectComponentsPreview(proj.title);
+  updateInvoiceViews();
+}
+
+// Detect components and working principle from title or keywords
+function detectProjectComponentsAndPrinciple(inputTitle) {
+  if (!inputTitle || !inputTitle.trim()) return null;
+  const cleanTitle = inputTitle.trim();
+  const lower = cleanTitle.toLowerCase();
+
+  // 1. Exact or Direct Match in Database
+  for (const proj of PROJECT_DATABASE) {
+    if (proj.title.toLowerCase() === lower) {
+      return {
+        matched: true,
+        title: proj.title,
+        principle: proj.principle,
+        components: proj.components
+      };
+    }
+  }
+
+  // 2. Keyword Overlap Scoring
+  let bestProj = null;
+  let bestScore = 0;
+  for (const proj of PROJECT_DATABASE) {
+    let score = 0;
+    if (proj.keywords) {
+      for (const kw of proj.keywords) {
+        if (lower.includes(kw.toLowerCase())) {
+          score += 2;
+        }
+      }
+    }
+    const words = proj.title.toLowerCase().split(/\s+/);
+    for (const w of words) {
+      if (w.length > 3 && lower.includes(w)) {
+        score += 1;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestProj = proj;
+    }
+  }
+
+  if (bestProj && bestScore >= 4) {
+    return {
+      matched: true,
+      title: cleanTitle,
+      principle: bestProj.principle,
+      components: bestProj.components
+    };
+  }
+
+  // 3. Fallback: Intelligent Keyword Analysis & Generator
+  const suggestedComponents = [];
+  const detectedSensors = [];
+  const detectedActuators = [];
+
+  function addComp(name, qty = 1) {
+    if (!suggestedComponents.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+      suggestedComponents.push({ name, qty });
+    }
+  }
+
+  // Controller
+  if (lower.includes("esp32")) {
+    addComp("ESP32", 1);
+  } else if (lower.includes("esp8266") || lower.includes("iot") || lower.includes("wifi") || lower.includes("cloud")) {
+    addComp("ESP8266", 1);
+  } else if (lower.includes("nano")) {
+    addComp("Arduino Nano", 1);
+  } else {
+    addComp("Arduino uno", 1);
+  }
+
+  // Sensing hardware
+  if (lower.includes("soil") || lower.includes("moisture") || lower.includes("irrigation") || lower.includes("plant") || lower.includes("crop")) {
+    addComp("SOIL MOISOR SENSOR (WET)", 1);
+    detectedSensors.push("soil moisture sensor");
+  }
+  if (lower.includes("ultrasonic") || lower.includes("obstacle") || lower.includes("distance") || lower.includes("blind") || lower.includes("radar")) {
+    addComp("ULTRASONIC SENSOR", 1);
+    detectedSensors.push("ultrasonic distance sensor");
+  }
+  if (lower.includes("temp") || lower.includes("humidity") || lower.includes("climate") || lower.includes("weather")) {
+    if (lower.includes("dht22")) {
+      addComp("DH22", 1);
+      detectedSensors.push("high-accuracy DHT22 temperature and humidity sensor");
+    } else {
+      addComp("DHT11", 1);
+      detectedSensors.push("DHT11 temperature and humidity sensor");
+    }
+  }
+  if (lower.includes("gas") || lower.includes("smoke") || lower.includes("lpg") || lower.includes("air pollution") || lower.includes("toxic")) {
+    addComp("MQ2 SMOKE/GAS SENSOR", 1);
+    detectedSensors.push("MQ-2 electrochemical gas sensor");
+  }
+  if (lower.includes("rfid") || lower.includes("card") || lower.includes("attendance") || lower.includes("tag")) {
+    addComp("RFID RC522", 1);
+    detectedSensors.push("RC522 RFID reader");
+  }
+  if (lower.includes("pulse") || lower.includes("heart") || lower.includes("spo2") || lower.includes("patient") || lower.includes("health")) {
+    addComp("MAX30102 PULSE", 1);
+    detectedSensors.push("MAX30102 pulse oximeter sensor");
+  }
+  if (lower.includes("infrared") || lower.includes("ir") || lower.includes("proximity") || lower.includes("line")) {
+    addComp("IR SENSOR", 1);
+    detectedSensors.push("infrared proximity sensor");
+  }
+  if (lower.includes("metal") || lower.includes("inductive")) {
+    addComp("METAL SENSOR", 1);
+    detectedSensors.push("inductive metal sensor");
+  }
+  if (lower.includes("tds") || lower.includes("water quality")) {
+    addComp("TDS SENSOR", 1);
+    detectedSensors.push("TDS water purity sensor");
+  }
+  if (lower.includes("ph")) {
+    addComp("PH SENSOR", 1);
+    detectedSensors.push("pH probe sensor");
+  }
+  if (lower.includes("color") || lower.includes("colour")) {
+    addComp("COLOUR SENSOR YCS3200", 1);
+    detectedSensors.push("TCS3200 RGB color sensor");
+  }
+  if (lower.includes("gps") || lower.includes("location") || lower.includes("tracking")) {
+    addComp("GPS MODULE NEO 6M", 1);
+    detectedSensors.push("NEO-6M GPS receiver");
+  }
+  if (lower.includes("gyro") || lower.includes("accelerometer") || lower.includes("tilt") || lower.includes("vibration") || lower.includes("fall")) {
+    addComp("MPU6050", 1);
+    detectedSensors.push("MPU6050 6-axis gyro/accelerometer");
+  }
+  if (lower.includes("current") || lower.includes("power") || lower.includes("energy")) {
+    addComp("ACS712 20A CURRENT SENSOR", 1);
+    addComp("DC VOLTMETER VOLT SENSOR", 1);
+    detectedSensors.push("ACS712 current and voltage sensors");
+  }
+  if (lower.includes("lora") || lower.includes("long range")) {
+    addComp("LORA RA02 (SX1278)", 1);
+    addComp("ANTENNA", 1);
+    addComp("SMA150MM", 1);
+    addComp("3.3V 5V LOGIC LEVEL CONVERTOR", 1);
+  }
+  if (lower.includes("voice") || lower.includes("audio") || lower.includes("sound") || lower.includes("speaker") || lower.includes("music")) {
+    addComp("DF PLAYER MINI", 1);
+  }
+  if (lower.includes("gsm") || lower.includes("sms") || lower.includes("sim") || lower.includes("call")) {
+    addComp("SIM800L", 1);
+  }
+  if (lower.includes("keypad") || lower.includes("pin") || lower.includes("password")) {
+    addComp("KEYPAD 4X4", 1);
+  }
+
+  // Actuators
+  if (lower.includes("motor") || lower.includes("pump") || lower.includes("water")) {
+    addComp("5V RELAY MODULE", 1);
+    addComp("WATER MOTOR", 1);
+    detectedActuators.push("relay-driven DC motor/pump");
+  } else if (lower.includes("relay") || lower.includes("light") || lower.includes("lamp") || lower.includes("switch")) {
+    addComp("5V RELAY MODULE", 1);
+    detectedActuators.push("5V relay switch");
+  }
+  if (lower.includes("servo") || lower.includes("arm") || lower.includes("door") || lower.includes("gate") || lower.includes("lock") || lower.includes("robot")) {
+    addComp("SERVO MOTOR SG90", 1);
+    detectedActuators.push("SG90 micro servo actuator");
+  }
+  if (lower.includes("alarm") || lower.includes("buzzer") || lower.includes("alert") || lower.includes("warning") || lower.includes("beeper")) {
+    addComp("BUZZER MODULE", 1);
+    detectedActuators.push("audible buzzer alert");
+  }
+
+  // Displays
+  if (lower.includes("oled")) {
+    addComp("OLED 0.96", 1);
+  } else if (lower.includes("lcd") || lower.includes("display") || lower.includes("screen") || lower.includes("meter")) {
+    addComp("LCD 16X2", 1);
+  }
+
+  // Wiring & Board
+  addComp("JUMPER WIRE", 1);
+  addComp("BREADBOARD", 1);
+
+  const sensorDesc = detectedSensors.length > 0 ? detectedSensors.join(" and ") : "integrated input sensing transducers";
+  const actuatorDesc = detectedActuators.length > 0 ? detectedActuators.join(" along with ") : "electronic actuators and indicators";
+  const controllerName = suggestedComponents[0] ? suggestedComponents[0].name : "microcontroller unit";
+
+  const generatedPrinciple = `The project operates using a ${controllerName} which continuously interfaces with the ${sensorDesc} to monitor target physical parameters. When incoming sensor signals exceed pre-set threshold values, the controller executes embedded logic routines to automatically command the ${actuatorDesc}, delivering reliable real-time operation, automation, and status feedback.`;
+
+  return {
+    matched: false,
+    title: cleanTitle,
+    principle: generatedPrinciple,
+    components: suggestedComponents
+  };
+}
+
+// Update the preview box showing detected components and estimated price
+function updateProjectComponentsPreview(title) {
+  if (!projectComponentsPreview || !detectedChipsList) return;
+
+  const result = detectProjectComponentsAndPrinciple(title);
+  if (!result || !result.components || result.components.length === 0) {
+    currentDetectedProjectComponents = [];
+    projectComponentsPreview.style.display = 'none';
+    return;
+  }
+
+  currentDetectedProjectComponents = result.components;
+  projectComponentsPreview.style.display = 'block';
+
+  let totalEstimate = 0;
+  detectedChipsList.innerHTML = '';
+
+  result.components.forEach(comp => {
+    // Lookup item price in currentCatalog
+    const catItem = currentCatalog.find(c => c.name.toLowerCase() === comp.name.toLowerCase());
+    const unitPrice = catItem ? catItem.price : 0;
+    totalEstimate += unitPrice * comp.qty;
+
+    const chip = document.createElement('div');
+    chip.className = 'detected-chip';
+    chip.innerHTML = `
+      <span>${escapeHtml(comp.name)}</span>
+      <span class="chip-qty">x${comp.qty}</span>
+      <span class="chip-price">₹${unitPrice * comp.qty}</span>
+    `;
+    detectedChipsList.appendChild(chip);
+  });
+
+  if (detectedItemCount) detectedItemCount.textContent = result.components.length;
+  if (detectedTotalEstimate) detectedTotalEstimate.textContent = `Est. ₹${formatCurrency(totalEstimate)}`;
+}
+
+// Auto-suggest button / input trigger
+function autoSuggestProjectDetails(manualClick = false) {
+  const title = inputProjectTitle ? inputProjectTitle.value.trim() : '';
+  if (!title) {
+    if (manualClick) {
+      alert("Please enter or select a project title first!");
+      inputProjectTitle.focus();
+    }
+    currentDetectedProjectComponents = [];
+    if (projectComponentsPreview) projectComponentsPreview.style.display = 'none';
+    updateInvoiceViews();
+    return;
+  }
+
+  const result = detectProjectComponentsAndPrinciple(title);
+  if (result) {
+    if (inputWorkingPrinciple) {
+      if (manualClick || !inputWorkingPrinciple.value.trim()) {
+        inputWorkingPrinciple.value = result.principle;
+      }
+    }
+    updateProjectComponentsPreview(title);
+    updateInvoiceViews();
+    if (manualClick) {
+      alert(`Auto-detected ${result.components.length} components for "${title}"! Click "Load to Bill" to add them.`);
+    }
+  } else {
+    if (manualClick) {
+      alert(`No automatic components found for "${title}". You can select components manually from the catalog.`);
+    }
+  }
+}
+
+// Load detected project components directly into the bill
+function loadProjectComponentsToBill() {
+  const title = inputProjectTitle ? inputProjectTitle.value.trim() : '';
+  if (!title) {
+    alert("Please enter a project title or select one from the quick pick options first!");
+    if (inputProjectTitle) inputProjectTitle.focus();
+    return;
+  }
+
+  if (currentDetectedProjectComponents.length === 0) {
+    const result = detectProjectComponentsAndPrinciple(title);
+    if (result && result.components) {
+      currentDetectedProjectComponents = result.components;
+    }
+  }
+
+  if (currentDetectedProjectComponents.length === 0) {
+    alert("No project components detected. Please choose a project or add items from the catalog.");
+    return;
+  }
+
+  // Load components into invoiceItems
+  let addedCount = 0;
+  let updatedCount = 0;
+
+  currentDetectedProjectComponents.forEach(comp => {
+    const catItem = currentCatalog.find(c => c.name.toLowerCase() === comp.name.toLowerCase());
+    const unitPrice = catItem ? catItem.price : 0;
+    const desc = catItem ? catItem.name : comp.name;
+
+    const existing = invoiceItems.find(i => i.description.toLowerCase() === desc.toLowerCase());
+    if (existing) {
+      existing.qty = Math.max(existing.qty, comp.qty);
+      existing.unitPrice = unitPrice || existing.unitPrice;
+      updatedCount++;
+    } else {
+      invoiceItems.push({
+        id: Date.now() + Math.random(),
+        description: desc,
+        qty: comp.qty,
+        unitPrice: unitPrice
+      });
+      addedCount++;
+    }
+  });
+
+  renderInvoice();
+  alert(`Successfully loaded ${addedCount + updatedCount} project components into the bill for "${title}"!`);
+}
+
+// Clear project details
+function clearProjectDetails() {
+  if (inputProjectTitle) inputProjectTitle.value = '';
+  if (inputWorkingPrinciple) inputWorkingPrinciple.value = '';
+  currentDetectedProjectComponents = [];
+  if (projectComponentsPreview) projectComponentsPreview.style.display = 'none';
+  document.querySelectorAll('.project-chip').forEach(c => c.classList.remove('active'));
+  updateInvoiceViews();
+}
+
+// Copy working principle to clipboard
+function copyWorkingPrinciple() {
+  const text = inputWorkingPrinciple ? inputWorkingPrinciple.value.trim() : '';
+  if (!text) {
+    alert("No working principle text to copy!");
+    return;
+  }
+
+  navigator.clipboard.writeText(text).then(() => {
+    if (btnCopyPrinciple) {
+      const origHtml = btnCopyPrinciple.innerHTML;
+      btnCopyPrinciple.innerHTML = `<i class="fa-solid fa-check font-green"></i> Copied!`;
+      setTimeout(() => {
+        btnCopyPrinciple.innerHTML = origHtml;
+      }, 2000);
+    }
+  }).catch(() => {
+    alert("Working principle copied to clipboard!");
+  });
 }
 
 // Render Catalog List
@@ -589,6 +1348,29 @@ function updateInvoiceViews() {
   viewCustAddress.textContent = inputCustAddress.value || '';
   viewCustPhone.textContent = inputCustPhone.value ? `Phone: ${inputCustPhone.value}` : '';
   viewCustEmail.textContent = inputCustEmail.value ? `Email: ${inputCustEmail.value}` : '';
+
+  // Update Project Specification Views on A4 Sheet
+  const showProject = chkShowProjectOnBill ? chkShowProjectOnBill.checked : true;
+  const projectTitle = inputProjectTitle ? inputProjectTitle.value.trim() : '';
+  const workingPrinciple = inputWorkingPrinciple ? inputWorkingPrinciple.value.trim() : '';
+
+  if (viewProjectSection) {
+    if (showProject && projectTitle) {
+      viewProjectSection.style.display = 'block';
+      if (viewProjectTitle) viewProjectTitle.textContent = projectTitle;
+      
+      if (viewProjectPrincipleRow) {
+        if (workingPrinciple) {
+          viewProjectPrincipleRow.style.display = 'flex';
+          if (viewWorkingPrinciple) viewWorkingPrinciple.textContent = workingPrinciple;
+        } else {
+          viewProjectPrincipleRow.style.display = 'none';
+        }
+      }
+    } else {
+      viewProjectSection.style.display = 'none';
+    }
+  }
 }
 
 // Render Table Rows with Inline Editors
