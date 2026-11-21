@@ -106,11 +106,11 @@ const PROJECT_DATABASE = [
       "water motor",
       "irrigation"
     ],
-    "principle": "Monitors ambient microclimate using the DHT11 sensor while testing subterranean root moisture with the wet soil sensor. When temperature spikes or soil desiccates, the ESP32 activates the water motor pump and cooling fan via relay, streaming greenhouse telemetry over Wi-Fi.",
-    "reasoning": "ESP32 provides high-speed dual-core processing and Wi-Fi for telemetry, paired with DHT11 and Soil Moisture for complete microclimate automation.",
+    "principle": "Monitors ambient microclimate using the DHT11 sensor while testing subterranean root moisture with the wet soil sensor. When temperature spikes or soil desiccates, the Arduino Uno activates the water motor pump and cooling fan via relay.",
+    "reasoning": "Arduino Uno controls microclimate automation using DHT11, wet soil moisture sensor, and relay-driven irrigation pump.",
     "components": [
       {
-        "name": "ESP32",
+        "name": "Arduino uno",
         "qty": 1
       },
       {
@@ -275,15 +275,14 @@ const PROJECT_DATABASE = [
       "temperature",
       "humidity",
       "dht11",
-      "esp32",
       "barometer",
       "weather station"
     ],
-    "principle": "The DHT11 capacitive humidity sensor and NTC thermistor capture ambient temperature and humidity data. The ESP32 microcontroller processes these signals, renders real-time graphical metrics onto the 0.96-inch OLED display, and transmits data telemetry to a cloud dashboard over Wi-Fi.",
-    "reasoning": "ESP32 integrates high-performance 2.4GHz Wi-Fi for cloud synchronization, driving an ultra-crisp I2C OLED display for field data visualization.",
+    "principle": "The DHT11 capacitive humidity sensor and NTC thermistor capture ambient temperature and humidity data. The Arduino microcontroller processes these signals and renders real-time graphical metrics onto the 0.96-inch OLED display.",
+    "reasoning": "Arduino Uno drives an ultra-crisp I2C OLED display to present live microclimate readings from DHT11.",
     "components": [
       {
-        "name": "ESP32",
+        "name": "Arduino uno",
         "qty": 1
       },
       {
@@ -891,10 +890,10 @@ const PROJECT_DATABASE = [
       "health monitor"
     ],
     "principle": "Uses dual-wavelength photoplethysmography (PPG) with red and infrared LEDs in the MAX30102 sensor to calculate blood oxygen saturation (SpO2) and pulse rate. The MLX90614 reads non-contact optical infrared radiation for body temperature, streaming vitals to doctors over IoT.",
-    "reasoning": "ESP32 collects high-precision PPG heart/SpO2 readings alongside optical thermal sensing, showing data on OLED and syncing to IoT cloud.",
+    "reasoning": "Arduino Uno collects high-precision PPG heart/SpO2 readings alongside optical thermal sensing, displaying vital stats on OLED.",
     "components": [
       {
-        "name": "ESP32",
+        "name": "Arduino uno",
         "qty": 1
       },
       {
@@ -2042,11 +2041,11 @@ const PROJECT_DATABASE = [
       "ev charger",
       "coulomb counter"
     ],
-    "principle": "Monitors EV powertrain battery current draw with the ACS712 sensor alongside terminal voltage with the DC voltage sensor. The ESP32 calculates real-time power discharge rates, battery health metrics, and sends telemetry to mobile devices over Wi-Fi.",
-    "reasoning": "ESP32 high-resolution ADC sampling voltage and ACS712 current for high-accuracy Coulomb counting and power analytics.",
+    "principle": "Monitors EV powertrain battery current draw with the ACS712 sensor alongside terminal voltage with the DC voltage sensor. The Arduino Uno calculates real-time power discharge rates and battery health metrics.",
+    "reasoning": "Arduino Uno samples voltage and ACS712 current for high-accuracy Coulomb counting and battery pack power analytics.",
     "components": [
       {
-        "name": "ESP32",
+        "name": "Arduino uno",
         "qty": 1
       },
       {
@@ -2310,11 +2309,7 @@ const PROJECT_DATABASE = [
 ];
 
 let currentCatalog = [...INITIAL_CATALOG];
-let invoiceItems = [
-  { id: 1, description: "Arduino uno", qty: 1, unitPrice: 250 },
-  { id: 3, description: "ESP32", qty: 2, unitPrice: 350 },
-  { id: 5, description: "DHT11", qty: 1, unitPrice: 60 }
-];
+let invoiceItems = [];
 
 let savedInvoices = loadHistoryFromStorage();
 let invoiceCounter = getNextInvoiceCounter();
@@ -3082,11 +3077,11 @@ function synthesizeProjectGenerative(cleanTitle) {
     }
   }
 
-  // 1. Controller Selection
-  if (lower.includes("esp32") || lower.includes("cloud") || lower.includes("telemetry") || lower.includes("bluetooth") || lower.includes("ble")) {
-    addComp("ESP32", 1, "ESP32 dual-core SoC selected for integrated Wi-Fi + Bluetooth and high processing speed.");
-  } else if (lower.includes("esp8266") || lower.includes("wifi") || lower.includes("iot") || lower.includes("web")) {
-    addComp("ESP8266", 1, "ESP8266 selected for energy-efficient Wi-Fi networking and cloud dashboard telemetry.");
+  // 1. Controller Selection (Arduino Uno is standard default unless specified)
+  if (lower.includes("esp32")) {
+    addComp("ESP32", 1, "ESP32 dual-core SoC selected for high-speed Wi-Fi and Bluetooth capabilities.");
+  } else if (lower.includes("esp8266")) {
+    addComp("ESP8266", 1, "ESP8266 selected for energy-efficient Wi-Fi networking.");
   } else if (lower.includes("nano") || lower.includes("compact") || lower.includes("wearable") || lower.includes("stick") || lower.includes("glove")) {
     addComp("Arduino Nano", 1, "Arduino Nano chosen for miniaturized footprint and ultra-low weight.");
   } else if (lower.includes("leonardo") || lower.includes("usb") || lower.includes("keyboard") || lower.includes("hid")) {
@@ -3188,7 +3183,7 @@ function synthesizeProjectGenerative(cleanTitle) {
   }
 
   // 5. Displays
-  if (lower.includes("oled") || suggestedComponents.some(c => c.name === "ESP32" || c.name === "MAX30102 PULSE")) {
+  if (lower.includes("oled") || lower.includes("graphical") || suggestedComponents.some(c => c.name === "MAX30102 PULSE")) {
     addComp("OLED 0.96", 1, "0.96-inch 128x64 high-contrast monochrome I2C OLED graphical screen.");
   } else {
     addComp("LCD 16X2", 1, "16x2 alphanumeric liquid crystal display provides real-time system readouts.");
@@ -3226,9 +3221,20 @@ function detectProjectComponentsAndPrinciple(inputTitle) {
   const cleanTitle = inputTitle.trim();
   const lower = cleanTitle.toLowerCase();
 
+  // Check if title explicitly specifies a known microcontroller
+  let explicitMcuInTitle = null;
+  if (lower.includes("esp32")) explicitMcuInTitle = "ESP32";
+  else if (lower.includes("esp8266")) explicitMcuInTitle = "ESP8266";
+  else if (lower.includes("nano")) explicitMcuInTitle = "Arduino Nano";
+  else if (lower.includes("leonardo")) explicitMcuInTitle = "ARDUINO LEONARDO";
+  else if (lower.includes("uno") || lower.includes("arduino uno")) explicitMcuInTitle = "Arduino uno";
+
   // 1. Direct or exact match
   for (const proj of PROJECT_DATABASE) {
     if (proj.title.toLowerCase() === lower) {
+      const finalComponents = explicitMcuInTitle 
+        ? applyMcuOverride(proj.components, explicitMcuInTitle)
+        : proj.components;
       return {
         matched: true,
         generative: false,
@@ -3237,7 +3243,7 @@ function detectProjectComponentsAndPrinciple(inputTitle) {
         category: proj.category,
         principle: proj.principle,
         reasoning: proj.reasoning || `Pre-configured production architecture optimized for ${proj.title}.`,
-        components: proj.components
+        components: finalComponents
       };
     }
   }
@@ -3257,6 +3263,9 @@ function detectProjectComponentsAndPrinciple(inputTitle) {
   }
 
   if (bestProj && bestScore >= 18) {
+    const finalComponents = explicitMcuInTitle 
+      ? applyMcuOverride(bestProj.components, explicitMcuInTitle)
+      : bestProj.components;
     return {
       matched: true,
       generative: false,
@@ -3265,7 +3274,7 @@ function detectProjectComponentsAndPrinciple(inputTitle) {
       category: bestProj.category,
       principle: bestProj.principle,
       reasoning: bestProj.reasoning || `Matched against validated engineering project with ${Math.max(75, bestConfidence)}% confidence.`,
-      components: bestProj.components
+      components: finalComponents
     };
   }
 
@@ -3399,8 +3408,8 @@ function updateProjectComponentsPreview(title) {
   if (mcuHintBadge) {
     if (currentSelectedMcu === 'auto') {
       const autoMcu = currentDetectedProjectComponents.find(c => KNOWN_MCUS.some(m => m.toLowerCase() === c.name.toLowerCase()));
-      mcuHintBadge.textContent = autoMcu ? `⚡ Auto: ${autoMcu.name}` : '⚡ Auto-Selected';
-      updateMcuPillsUI(autoMcu ? autoMcu.name : 'auto');
+      mcuHintBadge.textContent = autoMcu ? `⚡ Auto: ${autoMcu.name}` : '⚡ Auto: Arduino uno';
+      updateMcuPillsUI('auto');
     } else {
       mcuHintBadge.textContent = `Custom: ${currentSelectedMcu}`;
       updateMcuPillsUI(currentSelectedMcu);
@@ -3496,13 +3505,29 @@ function loadProjectComponentsToBill() {
   if (currentDetectedProjectComponents.length === 0) {
     const result = detectProjectComponentsAndPrinciple(title);
     if (result && result.components) {
-      currentDetectedProjectComponents = result.components;
+      currentDetectedProjectComponents = applyMcuOverride(result.components, currentSelectedMcu);
     }
+  } else {
+    currentDetectedProjectComponents = applyMcuOverride(currentDetectedProjectComponents, currentSelectedMcu);
   }
 
   if (currentDetectedProjectComponents.length === 0) {
     alert("No project components detected. Please choose a project or add items from the catalog.");
     return;
+  }
+
+  // Identify incoming microcontroller in new components
+  const incomingMcu = currentDetectedProjectComponents.find(c =>
+    KNOWN_MCUS.some(m => m.toLowerCase() === c.name.toLowerCase())
+  );
+
+  // If new components include an MCU, remove any OTHER old MCUs from the bill to prevent duplicate/stray ESP32
+  if (incomingMcu) {
+    invoiceItems = invoiceItems.filter(item => {
+      const isKnownMcu = KNOWN_MCUS.some(m => m.toLowerCase() === item.description.toLowerCase());
+      if (!isKnownMcu) return true;
+      return item.description.toLowerCase() === incomingMcu.name.toLowerCase();
+    });
   }
 
   // Load components into invoiceItems
