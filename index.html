@@ -64,15 +64,19 @@
         <button id="btnViewBill" class="btn btn-view-bill" title="View live A4 printable bill">
           <i class="fa-solid fa-eye"></i> View Bill (<span id="viewBillBadge">0</span>)
         </button>
-        <button id="btnSaveInvoice" class="btn btn-accent" title="Save current bill to localhost history">
+        <button id="btnSaveInvoice" class="btn btn-accent" title="Save current bill to history & Documents\BILL">
           <i class="fa-solid fa-floppy-disk"></i> Save Bill
         </button>
         <button id="btnSaveNew" class="btn btn-secondary" title="Save current bill and start new">
           <i class="fa-solid fa-plus-circle"></i> Save &amp; New
         </button>
-        <button id="btnPrint" class="btn btn-primary" title="Print or Download PDF">
-          <i class="fa-solid fa-print"></i> Print / PDF
+        <button id="btnPrint" class="btn btn-primary" title="Print or Save PDF to C:\Users\Gokulnatraj\Documents\BILL">
+          <i class="fa-solid fa-download"></i> Download / Print
         </button>
+      </div>
+      <div class="save-dir-hint-bar">
+        <i class="fa-solid fa-folder-open font-red"></i> 
+        <span>Target PDF Folder: <strong>C:\Users\Gokulnatraj\Documents\BILL</strong></span>
       </div>
 
       <!-- Accordion / Control Sections -->
@@ -153,29 +157,48 @@
               <label for="inputSellerAddress">Seller Address:</label>
               <textarea id="inputSellerAddress" rows="2" placeholder="Seller address details"></textarea>
             </div>
+
+            <!-- Seller Signature Control -->
+            <div class="form-group margin-top-xs">
+              <label><i class="fa-solid fa-signature font-red"></i> Authorized Signature (Printed on Bill):</label>
+              <div class="sig-preview-bar">
+                <div class="sig-thumb-wrap">
+                  <img src="signature.png" id="thumbSignature" alt="Gokulraj Natarajan Signature">
+                </div>
+                <div class="sig-btn-group">
+                  <button type="button" id="btnRotateSig" class="btn btn-secondary btn-xs" title="Rotate signature orientation">
+                    <i class="fa-solid fa-rotate"></i> Rotate 90°
+                  </button>
+                  <label for="uploadNewSig" class="btn btn-secondary btn-xs" title="Upload custom signature image">
+                    <i class="fa-solid fa-upload"></i> Upload
+                    <input type="file" id="uploadNewSig" accept="image/*" style="display:none;">
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- SECTION 1.5: PROJECT & WORKING PRINCIPLE (SMART BILL BUILDER) -->
+        <!-- SECTION 1.5: AI PROJECT & SMART BILL BUILDER -->
         <div class="control-card project-card">
           <div class="card-header space-between">
             <div class="title-with-icon">
-              <i class="fa-solid fa-diagram-project font-red"></i>
-              <h2>Project &amp; Working Principle</h2>
+              <i class="fa-solid fa-brain font-red"></i>
+              <h2>AI Project &amp; Bill Assistant</h2>
             </div>
-            <span class="badge-count" id="projectBadge">Smart Builder</span>
+            <span class="badge-count" id="projectBadge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Engine 2.0</span>
           </div>
 
           <div class="card-body">
-            <!-- Project Title Input with Auto-Suggest -->
+            <!-- Project Title / AI Prompt Input with Auto-Suggest -->
             <div class="form-group">
               <label for="inputProjectTitle">
-                <i class="fa-solid fa-heading"></i> Project Title:
+                <i class="fa-solid fa-lightbulb font-red"></i> Project Name or AI Description:
               </label>
               <div class="project-input-wrap">
-                <input type="text" id="inputProjectTitle" list="projectPresetsList" placeholder="e.g. Smart Irrigation System, Obstacle Robot..." autocomplete="off">
-                <button type="button" id="btnAutoSuggestProject" class="btn-input-action" title="Auto-fill components and working principle">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Fill
+                <input type="text" id="inputProjectTitle" list="projectPresetsList" placeholder="e.g. Smart Irrigation, Obstacle Robot, Line Follower, or type a prompt..." autocomplete="off">
+                <button type="button" id="btnAutoSuggestProject" class="btn-input-action" title="AI Auto-Detect Components & Working Principle">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> AI Detect
                 </button>
               </div>
               <datalist id="projectPresetsList">
@@ -183,34 +206,83 @@
               </datalist>
             </div>
 
+            <!-- Microcontroller Selection Option (Arduino, ESP32, Nano, etc.) -->
+            <div class="form-group mcu-select-group margin-top-xs">
+              <div class="label-with-action">
+                <label for="selectMicrocontroller">
+                  <i class="fa-solid fa-microchip font-red"></i> Microcontroller Option:
+                </label>
+                <span class="mcu-hint-badge" id="mcuHintBadge">⚡ Auto-Selected</span>
+              </div>
+              <div class="mcu-control-wrap">
+                <select id="selectMicrocontroller" class="select-mcu-dropdown">
+                  <option value="auto">⚡ Auto-Detect (AI Optimal Controller)</option>
+                  <option value="Arduino uno">Arduino Uno (₹250)</option>
+                  <option value="Arduino Nano">Arduino Nano (₹190)</option>
+                  <option value="ESP32">ESP32 (Wi-Fi + BLE Dual Core - ₹350)</option>
+                  <option value="ESP8266">ESP8266 (Wi-Fi NodeMCU - ₹250)</option>
+                  <option value="ARDUINO LEONARDO">Arduino Leonardo (USB HID - ₹415)</option>
+                </select>
+              </div>
+              <!-- Quick Microcontroller Pills -->
+              <div class="mcu-quick-pills" id="mcuQuickPills">
+                <button type="button" class="mcu-pill active" data-mcu="auto">⚡ Auto</button>
+                <button type="button" class="mcu-pill" data-mcu="Arduino uno">Uno</button>
+                <button type="button" class="mcu-pill" data-mcu="Arduino Nano">Nano</button>
+                <button type="button" class="mcu-pill" data-mcu="ESP32">ESP32</button>
+                <button type="button" class="mcu-pill" data-mcu="ESP8266">ESP8266</button>
+                <button type="button" class="mcu-pill" data-mcu="ARDUINO LEONARDO">Leonardo</button>
+              </div>
+            </div>
+
+            <!-- Category Filter for Quick Picks -->
+            <div class="ai-category-tabs" id="aiCategoryTabs">
+              <button type="button" class="ai-cat-btn active" data-cat="all">All</button>
+              <button type="button" class="ai-cat-btn" data-cat="AgriTech">AgriTech</button>
+              <button type="button" class="ai-cat-btn" data-cat="Robotics">Robotics</button>
+              <button type="button" class="ai-cat-btn" data-cat="IoT">IoT</button>
+              <button type="button" class="ai-cat-btn" data-cat="Healthcare">Healthcare</button>
+              <button type="button" class="ai-cat-btn" data-cat="Security">Security</button>
+              <button type="button" class="ai-cat-btn" data-cat="Smart City">Smart City</button>
+              <button type="button" class="ai-cat-btn" data-cat="Power">Power/Energy</button>
+            </div>
+
             <!-- Popular Quick Project Chips -->
             <div class="project-chips-wrapper">
               <span class="chips-label"><i class="fa-solid fa-bolt font-red"></i> Quick Pick:</span>
               <div class="project-chips" id="projectChipsContainer">
-                <!-- Populated dynamically via JS -->
+                <!-- Populated dynamically via JS based on category -->
               </div>
             </div>
 
-            <!-- Working Principle Textarea -->
+            <!-- Working Principle Textarea (Engineering Reference & Documentation - NOT shown on Bill) -->
             <div class="form-group margin-top-xs">
               <div class="label-with-action">
                 <label for="inputWorkingPrinciple">
-                  <i class="fa-solid fa-gears"></i> Working Principle:
+                  <i class="fa-solid fa-gears"></i> Working Principle <small class="text-muted">(For Project Docs - Not on Bill)</small>:
                 </label>
                 <button type="button" id="btnCopyPrinciple" class="btn-text-sm" title="Copy working principle to clipboard">
                   <i class="fa-solid fa-copy"></i> Copy
                 </button>
               </div>
-              <textarea id="inputWorkingPrinciple" rows="3" placeholder="Enter or auto-generate the operating principle / summary of the project..."></textarea>
+              <textarea id="inputWorkingPrinciple" rows="3" placeholder="AI auto-generated operating principle / engineering summary..."></textarea>
             </div>
 
             <!-- Detected / Suggested Components for Project -->
             <div class="project-components-preview" id="projectComponentsPreview" style="display: none;">
               <div class="preview-header">
-                <span class="preview-title"><i class="fa-solid fa-microchip font-red"></i> Project Components (<span id="detectedItemCount">0</span>):</span>
+                <span class="preview-title">
+                  <i class="fa-solid fa-microchip font-red"></i> Suggested Components (<span id="detectedItemCount">0</span>):
+                  <span id="aiMatchBadge" class="ai-confidence-pill">98% Match</span>
+                </span>
                 <span class="preview-total" id="detectedTotalEstimate">₹0</span>
               </div>
               <div class="detected-chips-list" id="detectedChipsList"></div>
+              <!-- AI Architecture & Reasoning breakdown -->
+              <div class="ai-reasoning-wrap" id="aiReasoningWrap" style="display: none;">
+                <div class="ai-reasoning-header"><i class="fa-solid fa-brain font-red"></i> AI Architecture &amp; Rationale:</div>
+                <div class="ai-reasoning-text" id="aiReasoningText"></div>
+              </div>
             </div>
 
             <!-- Project Actions & Bill Integration -->
@@ -229,7 +301,7 @@
                 <input type="checkbox" id="chkShowProjectOnBill" checked>
                 <span class="slider"></span>
               </label>
-              <span class="toggle-label font-weight-600">Show Project on Printed Bill</span>
+              <span class="toggle-label font-weight-600">Show Project Name on Printed Bill</span>
             </div>
           </div>
         </div>
@@ -469,19 +541,15 @@
             </div>
           </section>
 
-          <!-- PROJECT SPECIFICATION SECTION (TITLE & WORKING PRINCIPLE) -->
+          <!-- PROJECT SPECIFICATION SECTION (PROJECT TITLE ONLY - NO WORKING PRINCIPLE IN BILL) -->
           <section class="project-spec-section" id="viewProjectSection" style="display: none;">
             <div class="project-spec-header">
               <span class="project-spec-tag"><i class="fa-solid fa-diagram-project"></i> PROJECT SPECIFICATION</span>
             </div>
             <div class="project-spec-body">
               <div class="project-spec-row project-title-row">
-                <span class="spec-label">PROJECT TITLE:</span>
+                <span class="spec-label">PROJECT:</span>
                 <span class="spec-title-text" id="viewProjectTitle">-</span>
-              </div>
-              <div class="project-spec-row project-principle-row" id="viewProjectPrincipleRow">
-                <span class="spec-label">WORKING PRINCIPLE:</span>
-                <span class="spec-desc-text" id="viewWorkingPrinciple">-</span>
               </div>
             </div>
           </section>
@@ -570,10 +638,12 @@
             <div class="sig-space"></div>
 
             <div class="signature-box-right">
-              <div class="sig-blank-space"></div>
+              <div class="sig-blank-space">
+                <img src="signature.png" alt="Authorized Signature" class="signature-img" id="sellerSignatureImg">
+              </div>
               <div class="sig-line"></div>
               <div class="sig-title">Authorized Signature</div>
-              <div class="sig-name">GOKULRAJ NATARAJAN</div>
+              <div class="sig-name" id="viewSellerSigName">GOKULRAJ NATARAJAN</div>
             </div>
           </footer>
 
