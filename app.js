@@ -3787,6 +3787,7 @@ function renderTableRows() {
   invoiceItems.forEach((item, index) => {
     const rowAmount = item.qty * item.unitPrice;
     const rowGst = (item.gstEnabled !== false) ? (rowAmount * 0.18) : 0;
+    const rowTotalWithGst = rowAmount + rowGst;
     const tr = document.createElement('tr');
 
     tr.innerHTML = `
@@ -3804,7 +3805,7 @@ function renderTableRows() {
         <input type="number" class="inline-edit-price" value="${item.unitPrice}" min="0" step="0.01" data-index="${index}">
       </td>
       <td class="cell-gst">${formatCurrency(rowGst)}</td>
-      <td class="cell-total">${formatCurrency(rowAmount)}</td>
+      <td class="cell-total">${formatCurrency(rowTotalWithGst)}</td>
     `;
 
     invoiceTableBody.appendChild(tr);
@@ -3879,23 +3880,25 @@ function renderBillGstControls() {
 
 // Calculate Summary Totals
 // Math Rule:
-// 1. Subtotal = sum(Component Qty * Unit Price)
-// 2. Taxable Component Subtotal = Subtotal - Discount
-// 3. GST 18% = Taxable Component Subtotal * 0.18
-// 4. TAX 20% (Sourcing & Handling) = (Taxable Component Subtotal + GST) * 0.20
-// 5. Labour Charge = user value (NO GST, NO TAX)
-// 6. Wooden Base Charge = user value (NO GST, NO TAX)
-// 7. Grand Total = Taxable Component Subtotal + GST 18% + TAX 20% + Labour Charge + Wooden Base Charge
+// 1. Row Total = (Qty * Unit Price) + Row GST (18% if GST=YES, else 0)
+// 2. Subtotal = sum(Row Total with GST)
+// 3. Net Component Total = Subtotal - Discount
+// 4. GST 18% = proportional total GST across GST-enabled items
+// 5. Taxable Component Subtotal = Net Component Total - GST 18%
+// 6. TAX 20% (Sourcing & Handling) = Net Component Total * 0.20
+// 7. Labour Charge = user value (NO GST, NO TAX)
+// 8. Wooden Base Charge = user value (NO GST, NO TAX)
+// 9. Grand Total = Net Component Total + TAX 20% + Labour Charge + Wooden Base Charge
 function calculateTotals() {
-  let subtotal = 0;
-  let gstSubtotal = 0;
+  let baseSubtotal = 0;
+  let totalRowGst = 0;
   invoiceItems.forEach(item => {
-    const lineTotal = item.qty * item.unitPrice;
-    subtotal += lineTotal;
-    if (item.gstEnabled !== false) {
-      gstSubtotal += lineTotal;
-    }
+    const lineBase = item.qty * item.unitPrice;
+    const lineGst = (item.gstEnabled !== false) ? (lineBase * 0.18) : 0;
+    baseSubtotal += lineBase;
+    totalRowGst += lineGst;
   });
+  const subtotal = baseSubtotal + totalRowGst;
 
   // Handle Discount Toggle and Mode (Flat vs Percent)
   let discount = 0;
@@ -3934,10 +3937,11 @@ function calculateTotals() {
     }
   }
 
-  const taxable = Math.max(0, subtotal - discount);
-  const gstTaxable = (subtotal > 0 && gstSubtotal > 0) ? (gstSubtotal * (taxable / subtotal)) : 0;
-  const gst = gstTaxable * 0.18;
-  const serviceTax = (taxable + gst) * 0.20;
+  const netWithGst = Math.max(0, subtotal - discount);
+  const ratio = subtotal > 0 ? (netWithGst / subtotal) : 0;
+  const gst = totalRowGst * ratio;
+  const taxable = Math.max(0, netWithGst - gst);
+  const serviceTax = netWithGst * 0.20;
 
   if (viewGstLabel) {
     viewGstLabel.textContent = 'GST 18% (Rs.)';
