@@ -2384,6 +2384,12 @@ const discountUnitBadge = document.getElementById('discountUnitBadge');
 const discountCalcHint = document.getElementById('discountCalcHint');
 const btnPresetClear = document.getElementById('btnPresetClear');
 
+const chkEnableGst = document.getElementById('chkEnableGst');
+const customGst = document.getElementById('customGst');
+const billGstListContainer = document.getElementById('billGstListContainer');
+const rowGst = document.getElementById('rowGst');
+const viewGstLabel = document.getElementById('viewGstLabel');
+
 const chkEnableLabour = document.getElementById('chkEnableLabour');
 const inputLabourCharge = document.getElementById('inputLabourCharge');
 const groupLabourInput = document.getElementById('groupLabourInput');
@@ -2546,6 +2552,16 @@ function bindEvents() {
     chkShowProjectOnBill.addEventListener('change', updateInvoiceViews);
   }
 
+  if (chkEnableGst) {
+    chkEnableGst.addEventListener('change', () => {
+      const enabled = chkEnableGst.checked;
+      invoiceItems.forEach(item => {
+        item.gstEnabled = enabled;
+      });
+      renderInvoice();
+    });
+  }
+
   [chkEnableDiscount, chkEnableLabour, chkEnableWooden].forEach(chk => {
     if (chk) {
       chk.addEventListener('change', () => {
@@ -2702,6 +2718,7 @@ function saveCurrentInvoiceToHistory(showNotification = true) {
     discountInputVal: parseFloat(inputDiscount.value) || 0,
     discountMode: discountMode || 'flat',
     discountEnabled: (chkEnableDiscount ? chkEnableDiscount.checked : true),
+    gstEnabled: (chkEnableGst ? chkEnableGst.checked : true),
     discount: totals.discount,
     labourCharge: (chkEnableLabour && chkEnableLabour.checked) ? (parseFloat(inputLabourCharge.value) || 0) : 0,
     woodenBaseCharge: (chkEnableWooden && chkEnableWooden.checked) ? (parseFloat(inputWoodenBaseCharge.value) || 0) : 0,
@@ -2816,6 +2833,10 @@ function loadInvoiceFromHistory(id) {
   
   if (chkEnableDiscount) {
     chkEnableDiscount.checked = record.discountEnabled !== undefined ? record.discountEnabled : true;
+  }
+  if (chkEnableGst) {
+    const hasAnyGst = (record.items || []).some(i => i.gstEnabled !== false);
+    chkEnableGst.checked = record.gstEnabled !== undefined ? record.gstEnabled : hasAnyGst;
   }
   setDiscountMode(record.discountMode || 'flat', record.discountInputVal !== undefined ? record.discountInputVal : (record.discount || 0));
 
@@ -3549,7 +3570,8 @@ function loadProjectComponentsToBill() {
         id: Date.now() + Math.random(),
         description: desc,
         qty: comp.qty,
-        unitPrice: unitPrice
+        unitPrice: unitPrice,
+        gstEnabled: chkEnableGst ? chkEnableGst.checked : true
       });
       addedCount++;
     }
@@ -3610,15 +3632,34 @@ function renderCatalog() {
   }
 
   filtered.forEach(item => {
+    const isGst = item.gstEnabled !== false;
     const div = document.createElement('div');
     div.className = 'catalog-item';
     div.innerHTML = `
       <div class="catalog-item-name">${escapeHtml(item.name)}</div>
       <div class="catalog-item-prices">
+        <div class="gst-toggle-group" title="GST Yes or No for this component">
+          <button type="button" class="btn-gst-opt ${isGst ? 'active-yes' : ''}" data-cat-gst="yes">YES</button>
+          <button type="button" class="btn-gst-opt ${!isGst ? 'active-no' : ''}" data-cat-gst="no">NO</button>
+        </div>
         <span class="badge-actual-price" title="Unit Price">Rs. ${item.price}</span>
         <i class="fa-solid fa-plus-circle btn-add-item-icn"></i>
       </div>
     `;
+    div.querySelectorAll('[data-cat-gst]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const yes = btn.getAttribute('data-cat-gst') === 'yes';
+        item.gstEnabled = yes;
+        const inBill = invoiceItems.find(i => i.description.toLowerCase() === item.name.toLowerCase());
+        if (inBill) {
+          inBill.gstEnabled = yes;
+          renderInvoice();
+        } else {
+          renderCatalog();
+        }
+      });
+    });
     div.addEventListener('click', () => addItemToInvoice(item));
     catalogListContainer.appendChild(div);
   });
@@ -3626,15 +3667,20 @@ function renderCatalog() {
 
 // Add Item from Catalog to Invoice
 function addItemToInvoice(catalogItem) {
+  const isGst = catalogItem.gstEnabled !== undefined
+    ? catalogItem.gstEnabled
+    : (chkEnableGst ? chkEnableGst.checked : true);
   const existing = invoiceItems.find(i => i.description.toLowerCase() === catalogItem.name.toLowerCase());
   if (existing) {
     existing.qty += 1;
+    existing.gstEnabled = isGst;
   } else {
     invoiceItems.push({
       id: Date.now() + Math.random(),
       description: catalogItem.name,
       qty: 1,
-      unitPrice: catalogItem.price
+      unitPrice: catalogItem.price,
+      gstEnabled: isGst
     });
   }
   renderInvoice();
@@ -3652,16 +3698,20 @@ function handleAddCustomItem() {
     return;
   }
 
+  const isGstSelected = customGst ? (customGst.value === 'yes') : (chkEnableGst ? chkEnableGst.checked : true);
+
   invoiceItems.push({
     id: Date.now(),
     description: desc,
     qty: Math.max(1, qty),
-    unitPrice: Math.max(0, priceVal)
+    unitPrice: Math.max(0, priceVal),
+    gstEnabled: isGstSelected
   });
 
   customDesc.value = '';
   customQty.value = 1;
   customPrice.value = '';
+  if (customGst) customGst.value = (chkEnableGst && !chkEnableGst.checked) ? 'no' : 'yes';
 
   renderInvoice();
 }
@@ -3670,6 +3720,7 @@ function handleAddCustomItem() {
 function renderInvoice() {
   updateInvoiceViews();
   renderTableRows();
+  renderBillGstControls();
   calculateTotals();
   if (mobileItemBadge) mobileItemBadge.textContent = invoiceItems.length;
   if (viewBillBadge) viewBillBadge.textContent = invoiceItems.length;
@@ -3725,7 +3776,7 @@ function renderTableRows() {
   if (invoiceItems.length === 0) {
     invoiceTableBody.innerHTML = `
       <tr>
-        <td colspan="5" style="text-align: center; color: #9CA3AF; padding: 2rem; font-style: italic;">
+        <td colspan="6" style="text-align: center; color: #9CA3AF; padding: 2rem; font-style: italic;">
           No items added to bill yet. Select components from the left catalog or add custom items.
         </td>
       </tr>
@@ -3735,6 +3786,7 @@ function renderTableRows() {
 
   invoiceItems.forEach((item, index) => {
     const rowAmount = item.qty * item.unitPrice;
+    const rowGst = (item.gstEnabled !== false) ? (rowAmount * 0.18) : 0;
     const tr = document.createElement('tr');
 
     tr.innerHTML = `
@@ -3751,6 +3803,7 @@ function renderTableRows() {
       <td class="cell-unit">
         <input type="number" class="inline-edit-price" value="${item.unitPrice}" min="0" step="0.01" data-index="${index}">
       </td>
+      <td class="cell-gst">${formatCurrency(rowGst)}</td>
       <td class="cell-total">${formatCurrency(rowAmount)}</td>
     `;
 
@@ -3785,19 +3838,63 @@ function renderTableRows() {
   });
 }
 
+// Render Per-Material GST (YES / NO) Controls in Left Panel (Not shown on Bill)
+function renderBillGstControls() {
+  if (!billGstListContainer) return;
+  billGstListContainer.innerHTML = '';
+
+  if (invoiceItems.length === 0) {
+    billGstListContainer.innerHTML = '<div class="bill-gst-empty">No components in bill yet.</div>';
+    return;
+  }
+
+  invoiceItems.forEach((item, index) => {
+    const isGst = item.gstEnabled !== false;
+    const row = document.createElement('div');
+    row.className = 'bill-gst-row';
+    row.innerHTML = `
+      <span class="bill-gst-name" title="${escapeHtml(item.description)}">${escapeHtml(item.description)}</span>
+      <div class="gst-toggle-group" title="Select GST Yes or No for this component">
+        <button type="button" class="btn-gst-opt ${isGst ? 'active-yes' : ''}" data-index="${index}" data-gst="yes">YES</button>
+        <button type="button" class="btn-gst-opt ${!isGst ? 'active-no' : ''}" data-index="${index}" data-gst="no">NO</button>
+      </div>
+    `;
+    billGstListContainer.appendChild(row);
+  });
+
+  billGstListContainer.querySelectorAll('.btn-gst-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-index'), 10);
+      const isYes = btn.getAttribute('data-gst') === 'yes';
+      if (invoiceItems[idx]) {
+        invoiceItems[idx].gstEnabled = isYes;
+        if (chkEnableGst) {
+          chkEnableGst.checked = invoiceItems.some(i => i.gstEnabled !== false);
+        }
+        renderInvoice();
+      }
+    });
+  });
+}
+
 // Calculate Summary Totals
 // Math Rule:
 // 1. Subtotal = sum(Component Qty * Unit Price)
 // 2. Taxable Component Subtotal = Subtotal - Discount
 // 3. GST 18% = Taxable Component Subtotal * 0.18
-// 4. TAX 15% (Sourcing & Handling) = (Taxable Component Subtotal + GST) * 0.15
+// 4. TAX 20% (Sourcing & Handling) = (Taxable Component Subtotal + GST) * 0.20
 // 5. Labour Charge = user value (NO GST, NO TAX)
 // 6. Wooden Base Charge = user value (NO GST, NO TAX)
-// 7. Grand Total = Taxable Component Subtotal + GST 18% + TAX 15% + Labour Charge + Wooden Base Charge
+// 7. Grand Total = Taxable Component Subtotal + GST 18% + TAX 20% + Labour Charge + Wooden Base Charge
 function calculateTotals() {
   let subtotal = 0;
+  let gstSubtotal = 0;
   invoiceItems.forEach(item => {
-    subtotal += item.qty * item.unitPrice;
+    const lineTotal = item.qty * item.unitPrice;
+    subtotal += lineTotal;
+    if (item.gstEnabled !== false) {
+      gstSubtotal += lineTotal;
+    }
   });
 
   // Handle Discount Toggle and Mode (Flat vs Percent)
@@ -3838,9 +3935,13 @@ function calculateTotals() {
   }
 
   const taxable = Math.max(0, subtotal - discount);
-  
-  const gst = taxable * 0.18;
-  const serviceTax = (taxable + gst) * 0.15;
+  const gstTaxable = (subtotal > 0 && gstSubtotal > 0) ? (gstSubtotal * (taxable / subtotal)) : 0;
+  const gst = gstTaxable * 0.18;
+  const serviceTax = (taxable + gst) * 0.20;
+
+  if (viewGstLabel) {
+    viewGstLabel.textContent = 'GST 18% (Rs.)';
+  }
   
   // Handle Labour Charge toggle
   let labourCharge = 0;

@@ -1295,9 +1295,10 @@ input:checked + .slider:before {
 }
 
 .invoice-table th.col-sno { width: 7%; text-align: center; }
-.invoice-table th.col-desc { width: 51%; }
-.invoice-table th.col-qty { width: 12%; text-align: center; }
-.invoice-table th.col-unit { width: 15%; text-align: right; }
+.invoice-table th.col-desc { width: 41%; }
+.invoice-table th.col-qty { width: 10%; text-align: center; }
+.invoice-table th.col-unit { width: 14%; text-align: right; }
+.invoice-table th.col-gst { width: 13%; text-align: right; }
 .invoice-table th.col-total { width: 15%; text-align: right; }
 
 .invoice-table td {
@@ -1318,7 +1319,79 @@ input:checked + .slider:before {
 .invoice-table td.cell-desc { font-weight: 600; color: #000000 !important; }
 .invoice-table td.cell-qty { text-align: center; font-weight: 600; }
 .invoice-table td.cell-unit,
+.invoice-table td.cell-gst,
 .invoice-table td.cell-total { text-align: right; font-weight: 600; }
+
+.bill-gst-panel {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 0.65rem;
+}
+
+.bill-gst-list {
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bill-gst-empty {
+  font-size: 0.78rem;
+  color: #71717A;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.bill-gst-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  font-size: 0.78rem;
+}
+
+.bill-gst-name {
+  font-weight: 600;
+  color: #18181B;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gst-toggle-group {
+  display: inline-flex;
+  flex-shrink: 0;
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #F3F4F6;
+}
+
+.btn-gst-opt {
+  border: none;
+  background: transparent;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6B7280;
+  cursor: pointer;
+  line-height: 1.3;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-gst-opt.active-yes {
+  background-color: #16A34A;
+  color: #FFFFFF;
+}
+
+.btn-gst-opt.active-no {
+  background-color: #DC2626;
+  color: #FFFFFF;
+}
 
 .item-delete-btn {
   background: none;
